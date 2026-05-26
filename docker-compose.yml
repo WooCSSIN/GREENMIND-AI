@@ -1,0 +1,140 @@
+version: '3.8'
+
+services:
+  # Redis - Message Broker & Cache
+  redis:
+    image: redis:7-alpine
+    container_name: greenmind-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - greenmind-network
+
+  # SQL Server (Optional - for development)
+  # Uncomment if using SQL Server locally
+  # sqlserver:
+  #   image: mcr.microsoft.com/mssql/server:2019-latest
+  #   container_name: greenmind-sqlserver
+  #   environment:
+  #     SA_PASSWORD: "YourPassword123!"
+  #     ACCEPT_EULA: "Y"
+  #   ports:
+  #     - "1433:1433"
+  #   volumes:
+  #     - sqlserver_data:/var/opt/mssql
+  #   networks:
+  #     - greenmind-network
+
+  # Django Web Application
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: greenmind-web
+    command: daphne -b 0.0.0.0 -p 8000 core.asgi:application
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=your-secret-key-change-in-production
+      - ALLOWED_HOSTS=localhost,127.0.0.1,web
+      - DB_SERVER=sqlserver
+      - DB_NAME=GreenMind
+      - DB_USER=sa
+      - DB_PASSWORD=YourPassword123!
+      - REDIS_URL=redis://redis:6379/0
+      - CHANNEL_LAYERS_BACKEND=channels_redis.core.RedisChannelLayer
+      - CHANNEL_LAYERS_CONFIG_HOSTS=redis:6379
+    volumes:
+      - .:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    depends_on:
+      redis:
+        condition: service_healthy
+      # sqlserver:
+      #   condition: service_healthy
+    networks:
+      - greenmind-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Celery Worker (for async tasks)
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: greenmind-celery
+    command: celery -A core worker -l info
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=your-secret-key-change-in-production
+      - REDIS_URL=redis://redis:6379/0
+      - DB_SERVER=sqlserver
+      - DB_NAME=GreenMind
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - web
+    networks:
+      - greenmind-network
+
+  # Celery Beat (for scheduled tasks)
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: greenmind-celery-beat
+    command: celery -A core beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=your-secret-key-change-in-production
+      - REDIS_URL=redis://redis:6379/0
+      - DB_SERVER=sqlserver
+      - DB_NAME=GreenMind
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - web
+    networks:
+      - greenmind-network
+
+  # Nginx Reverse Proxy (Optional)
+  nginx:
+    image: nginx:alpine
+    container_name: greenmind-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - static_volume:/app/staticfiles:ro
+      - media_volume:/app/media:ro
+    depends_on:
+      - web
+    networks:
+      - greenmind-network
+
+volumes:
+  redis_data:
+  sqlserver_data:
+  static_volume:
+  media_volume:
+
+networks:
+  greenmind-network:
+    driver: bridge
