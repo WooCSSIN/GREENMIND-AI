@@ -37,22 +37,45 @@ from core.utils.network import get_client_ip
 _engine = None
 _inventory_ctrl = None
 _logistics_ctrl = None
+_cache_timestamp = None
 
 def is_technical_admin(user):
     """Xác định user có phải phe kỹ thuật (Technical/DevOps) hay không."""
     return user.is_superuser or user.groups.filter(name='Technical').exists()
 
+def reset_engine_cache():
+    """
+    Reset global engine cache. Call this after any transaction that modifies inventory.
+    This ensures the next page load will fetch fresh data from the database.
+    """
+    global _engine, _inventory_ctrl, _logistics_ctrl, _cache_timestamp
+    _engine = None
+    _inventory_ctrl = None
+    _logistics_ctrl = None
+    _cache_timestamp = None
+    logging.info("Engine cache reset - fresh data will be loaded on next request")
+
 def get_engine_instances(force_reload=False):
     """
     Khởi tạo hoặc lấy các instance của AI Engine.
     Fix: Thêm trigger force_reload để reset cache sau khi có giao dịch mới.
+    
+    Args:
+        force_reload (bool): If True, forces a fresh load from database
+    
+    Returns:
+        tuple: (_engine, _inventory_ctrl, _logistics_ctrl)
     """
-    global _engine, _inventory_ctrl, _logistics_ctrl
+    global _engine, _inventory_ctrl, _logistics_ctrl, _cache_timestamp
+    
     if _engine is None or force_reload:
         _engine = GreenMindEngine()
         _engine.load_data()
         _inventory_ctrl = InventoryController(_engine)
         _logistics_ctrl = LogisticsController(_engine)
+        _cache_timestamp = pd.Timestamp.now()
+        logging.info(f"Engine cache initialized/reloaded at {_cache_timestamp}")
+    
     return _engine, _inventory_ctrl, _logistics_ctrl
 
 # ═══════════════════════════════════════════════════════════
@@ -284,11 +307,13 @@ def catalog_view(request):
                 inventory_service.delete_product(item_id)
                 messages.success(request, f"Đã vô hiệu hóa SKU: {item_id}")
 
-            # Reset cache
-            get_engine_instances(force_reload=True)
+            # Reset cache để dashboard cập nhật ngay lập tức
+            reset_engine_cache()
+            logging.info(f"Catalog action '{action}' completed for SKU={item_id} by {request.user.username}")
             
         except Exception as e:
             messages.error(request, sanitize_error(e, is_technical_admin(request.user)))
+            logging.error(f"Catalog action failed: {str(e)}", exc_info=True)
 
     try:
         df_prod = pd.read_sql("SELECT * FROM Dim_Products WHERE IsActive=1 ORDER BY ItemID DESC", con=sql_eng)
@@ -333,12 +358,15 @@ def simulator_view(request):
                 new_stock_level = inventory_service.process_inbound(sim_sku_val, sim_qty, sim_price, request.user.id)
             
             # Reset cache để dashboard cập nhật biểu đồ ngay lập tức
-            get_engine_instances(force_reload=True)
+            # This ensures the next page load will fetch fresh data from database
+            reset_engine_cache()
             transaction_success = True
             messages.success(request, f"Giao dịch thành công! Tồn kho mới: {new_stock_level}")
+            logging.info(f"Transaction completed: {sim_type} SKU={sim_sku_val} Qty={sim_qty} by {request.user.username}")
             
         except Exception as e:
             messages.error(request, sanitize_error(e, is_technical_admin(request.user)))
+            logging.error(f"Transaction failed: {str(e)}", exc_info=True)
     
     return render(request, 'dashboard/simulator.html', {
         'active_page': 'simulator', 'sku_mapping': sku_mapping,

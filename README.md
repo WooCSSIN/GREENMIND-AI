@@ -1,68 +1,340 @@
-# 🌿 GreenMind AI: Enterprise Green Logistics WMS
+# 🌱 GreenMind AI - Intelligent Warehouse Management System
 
-GreenMind là nền tảng quản trị kho thông minh tự thích nghi, được thiết kế chuyên biệt cho Logistics Xanh tại Việt Nam. Hệ thống kết hợp sức mạnh của Django (Web), SQL Server (Data), và AI Multi-model (Engine) để tối ưu hóa tồn kho và giảm thiểu dấu chân Carbon.
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/)
+[![Django](https://img.shields.io/badge/Django-5.0+-green.svg)](https://www.djangoproject.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![GitHub](https://img.shields.io/badge/GitHub-WooCSSIN-black.svg)](https://github.com/WooCSSIN/GREENMIND-AI)
 
----
+> **AI-powered inventory optimization with real-time forecasting and ESG impact tracking**
 
-## 🏗️ Cấu trúc dự án (Standard DEV Structure)
-
-Dự án được tổ chức theo chuẩn công nghiệp để đảm bảo tính bảo mật và khả năng bảo trì:
-
-- 📂 `apps/`: Chứa các ứng dụng Django chức năng (`api`, `dashboard`).
-- 📂 `core/`: Cấu hình hệ thống (Settings, URL routing, Middleware, Throttling).
-- 📂 `engine/`: Lõi xử lý AI chuyên sâu (SARIMAX, Prophet, XGBoost) và Logic nghiệp vụ.
-- 📂 `database/`: Các kịch bản SQL Server (Table, Stored Procedures, Triggers).
-- 📂 `scripts/`: Các công cụ quản trị (Worker tự động, Health Check, RBAC Setup).
-- 📂 `docs/`: Tài liệu kỹ thuật, báo cáo bảo mật và hướng dẫn triển khai.
-- 📂 `static/` & `core/templates/`: Giao diện người dùng (Tailwind CSS, Dark Mode).
+GreenMind is an intelligent warehouse management system that combines machine learning forecasting with environmental sustainability metrics. It helps businesses optimize inventory levels, reduce waste, and track their carbon footprint.
 
 ---
 
-## 🚀 Tính năng cốt lõi
+## 🎯 Key Features
 
-- **AI Multi-Model Battle:** Tự động chọn mô hình dự báo nhu cầu chính xác nhất cho từng SKU.
-- **Green Metrics & ESG:** Tính toán lượng phát thải CO2 tiết kiệm và quy đổi ra cây xanh tuong đương.
-- **Audit Trail & RBAC:** Phân quyền người dùng (Admin, Manager, Viewer) và ghi nhật ký thao tác bảo mật.
-- **Warehouse Heatmap:** Giám sát trực quan mật độ tồn kho theo vị trí kệ hàng.
-- **Production Ready:** Hệ thống đã được Hardening với HSTS, SSL Redirect, Rate Limiting, và Error Sanitization.
+### 📊 **AI-Powered Forecasting**
+- **3 ML Models**: SARIMAX, Prophet, XGBoost
+- **Champion Selection**: Automatic model selection based on MAE
+- **30-Day Demand Forecast**: Real-time predictions with confidence intervals
+- **Demand-Based Pipeline**: Forecasts actual demand, not just stock levels
+
+### 🏭 **Inventory Optimization**
+- **Safety Stock Calculation**: Dynamic safety stock based on demand variance
+- **Reorder Point (ROP)**: Automated reorder recommendations
+- **Stock Level Monitoring**: Real-time alerts for critical inventory
+- **Warehouse Heatmap**: Visual representation of stock distribution
+
+### 🌍 **ESG & Green Metrics**
+- **CO₂ Impact Tracking**: Energy-based model for warehouse storage emissions
+- **Annual Savings**: Quantified environmental impact of AI optimization
+- **Trees Equivalent**: Visualize carbon savings as tree equivalents
+- **Baseline vs Optimized**: Compare emissions before/after AI
+
+### 🔐 **Enterprise Security**
+- **JWT Authentication**: Secure API endpoints
+- **RBAC (Role-Based Access Control)**: Admin, Manager, Viewer roles
+- **Audit Logging**: Complete action trail for compliance
+- **Error Sanitization**: Secure error handling without info leakage
+
+### 📈 **Real-Time Dashboard**
+- **Dark Mode UI**: Modern, eye-friendly interface
+- **Interactive Charts**: Plotly-powered visualizations
+- **Live Updates**: Real-time data refresh
+- **Multi-SKU Support**: Manage thousands of products
 
 ---
 
-## 🛠️ Hướng dẫn cài đặt
+## 🏗️ Architecture
 
-### 1. Cơ sở dữ liệu (SQL Server)
+### 3-Tier Architecture
 
-Chạy các script trong thư mục `database/` theo thứ tự:
+```
+┌─────────────────────────────────────────────────────────┐
+│         Presentation Layer (Django + Plotly)            │
+│  Dashboard | API | Templates | Real-time Charts         │
+└─────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────┐
+│      Intelligence Layer (Python ML Engine)              │
+│  SARIMAX | Prophet | XGBoost | Feature Engineering      │
+└─────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────┐
+│         Data Layer (SQL Server)                         │
+│  Dim_Products | Fact_Inventory | AI_Predictions | Logs  │
+└─────────────────────────────────────────────────────────┘
+```
 
-1. `Create_table.sql`
-2. `migration_v3_security.sql` (Ràng buộc an toàn dữ liệu)
-3. `TRIGGERS.sql` (Logic tính toán CO2)
-4. `TRASACTION.sql` (Giao dịch nhập/xuất kho)
+### Technology Stack
 
-### 2. Môi trường Python
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | Django Templates, Tailwind CSS, Plotly.js |
+| **Backend** | Django 5.0, Django REST Framework, SQLAlchemy |
+| **ML/AI** | XGBoost, Prophet, SARIMAX, Scikit-learn, Pandas |
+| **Database** | Microsoft SQL Server, SQLite (dev) |
+| **Auth** | JWT (SimpleJWT), Django Groups |
+| **Deployment** | Gunicorn, Docker-ready |
 
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.9+
+- SQL Server (or SQLite for development)
+- Git
+
+### Installation
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/WooCSSIN/GREENMIND-AI.git
+cd GREENMIND-AI
+```
+
+2. **Create virtual environment**
 ```bash
 python -m venv venv
-source venv/bin/activate  # Hoặc venv\Scripts\activate trên Windows
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. **Install dependencies**
+```bash
 pip install -r requirements.txt
 ```
 
-### 3. Cấu hình & Chạy
+4. **Configure environment**
+```bash
+cp .env.example .env
+# Edit .env with your database credentials
+```
 
-1. Tạo file `.env` từ `.env.example`.
-2. Kiểm tra sức khỏe hệ thống: `python scripts/health_check.py`.
-3. Khởi chạy Server: `python manage.py runserver`.
-4. (Tùy chọn) Chạy Worker AI: `python scripts/worker.py`.
+5. **Run migrations**
+```bash
+python manage.py migrate
+```
+
+6. **Create superuser**
+```bash
+python manage.py createsuperuser
+```
+
+7. **Start development server**
+```bash
+python manage.py runserver
+```
+
+Access the dashboard at: **http://localhost:8000**
 
 ---
 
-## 👥 Đội ngũ phát triển
+## 📖 Usage
 
-- **Project Lead:** Hà Nhật Nguyên Vũ
-- **Data Scientist:** Nguyễn Văn Tới
-- **Logistics Expert:** Nguyễn Đào Kiều Dung
-- **Environmental Specialist:** Lê Huỳnh Quang Minh
+### Dashboard Views
+
+#### 🏠 **Home - Forecasting Dashboard**
+- Select SKU from dropdown
+- View historical stock vs AI forecast
+- See model comparison (MAE, RMSE)
+- Check inventory status (Safe/Warning/Critical)
+- View CO₂ savings potential
+
+#### 📦 **Catalog - Product Management**
+- Add/Edit/Delete products
+- Set emission factors
+- Configure safety stock levels
+- Manage warehouse locations
+
+#### 🎮 **Simulator - Transaction Testing**
+- Simulate inbound/outbound transactions
+- Test inventory impact
+- Verify forecast updates
+- Validate business rules
+
+#### 📊 **Monitoring - System Health**
+- View recent transactions
+- Check audit logs
+- Monitor CO₂ warnings
+- Warehouse heatmap
+
+#### 🌱 **ESG - Environmental Impact**
+- Annual CO₂ savings
+- Baseline vs optimized emissions
+- Quarterly trend analysis
+- Trees equivalent visualization
 
 ---
 
-_GreenMind AI Core Platform | Enterprise Edition v2.0 | 2026_
+## 🔧 Configuration
+
+### Environment Variables (.env)
+
+```env
+# Django
+DEBUG=True
+SECRET_KEY=your-secret-key-here
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# Database
+DB_SERVER=your-sql-server
+DB_NAME=GreenMind
+DB_USER=sa
+DB_PASSWORD=your-password
+
+# JWT
+JWT_ACCESS_TOKEN_LIFETIME_MINUTES=60
+JWT_REFRESH_TOKEN_LIFETIME_DAYS=7
+
+# AI Engine
+STORAGE_KWH_PER_UNIT=0.002
+GRID_EMISSION_VN=0.4937
+
+# CORS
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8080
+```
+
+---
+
+## 📊 Database Schema
+
+### Key Tables
+
+**Dim_Products** - Product Master Data
+- ItemID, ProductName, Category, Unit
+- EmissionFactor, SafetyStockLevel
+- ShelfRow, ShelfColumn, IsActive
+
+**Fact_Inventory_History** - Transaction Log
+- HistoryID, ItemID, UserID, Timestamp
+- Price, StockQuantity, SoldQuantity
+
+**Fact_AI_Predictions** - Forecast Results
+- PredictionID, ItemID, PredictionDate
+- ForecastedQuantity, ModelUsed
+
+**Green_Impact_Logs** - ESG Metrics
+- LogID, ItemID, AnualCO2Saving
+- TreesEquivalent, ChampionModel
+
+---
+
+## 🧪 Testing
+
+### Run Tests
+```bash
+python manage.py test
+```
+
+### Run Security Tests
+```bash
+python manage.py test tests.test_security
+```
+
+### Run Inventory Tests
+```bash
+python manage.py test tests.test_inventory_update
+```
+
+---
+
+## 🔐 Security Features
+
+✅ **JWT Authentication** - Stateless API auth  
+✅ **RBAC** - Role-based access control  
+✅ **CSRF Protection** - Django CSRF middleware  
+✅ **SQL Injection Prevention** - Parameterized queries  
+✅ **XSS Protection** - Template auto-escaping  
+✅ **Audit Logging** - Complete action trail  
+✅ **Error Sanitization** - No sensitive info in errors  
+✅ **Rate Limiting** - DDoS protection  
+✅ **HTTPS Ready** - Production security headers  
+
+---
+
+## 📈 Performance
+
+### Optimization Techniques
+- **Global Engine Cache**: Reusable ML model instances
+- **Database Indexing**: Optimized queries
+- **Lazy Loading**: On-demand data fetching
+- **Batch Processing**: Efficient bulk operations
+- **Connection Pooling**: Reused DB connections
+
+### Benchmarks
+- Dashboard load: ~2-3 seconds (with 3 ML models)
+- Forecast generation: ~1-2 seconds per SKU
+- API response: <500ms (cached)
+
+---
+
+## 🐛 Known Issues & Roadmap
+
+### Current Issues
+- [ ] Chart cache not updating after transactions (Fix in progress)
+- [ ] Dual authentication with Dim_Users (Refactoring)
+- [ ] Performance bottleneck with 3 concurrent ML models
+
+### Roadmap
+- [ ] Redis caching for distributed systems
+- [ ] Real-time WebSocket updates
+- [ ] Mobile app (React Native)
+- [ ] Advanced analytics (Tableau integration)
+- [ ] Multi-warehouse support
+- [ ] Supplier integration API
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please follow these steps:
+
+1. **Fork the repository**
+2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
+3. **Commit changes** (`git commit -m 'Add amazing feature'`)
+4. **Push to branch** (`git push origin feature/amazing-feature`)
+5. **Open a Pull Request**
+
+### Code Style
+- Follow PEP 8
+- Use type hints
+- Write docstrings
+- Add tests for new features
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👥 Team
+
+**GreenMind AI Development Team**
+- Lead: WooCSSIN
+- Contributors: Open to community
+
+---
+
+## 📞 Support
+
+- **Issues**: [GitHub Issues](https://github.com/WooCSSIN/GREENMIND-AI/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/WooCSSIN/GREENMIND-AI/discussions)
+- **Email**: dev@greenmind.ai
+
+---
+
+## 🙏 Acknowledgments
+
+- **Prophet** - Facebook's time series forecasting library
+- **XGBoost** - Gradient boosting framework
+- **Django** - Web framework
+- **Plotly** - Interactive visualization
+
+---
+
+**Made with ❤️ for sustainable logistics**
+
+Last updated: May 26, 2026

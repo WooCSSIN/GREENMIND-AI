@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/WooCSSIN/GREENMIND-AI/discussions
+    about: Ask questions and discuss ideas
+  - name: Documentation
+    url: https://github.com/WooCSSIN/GREENMIND-AI/wiki
+    about: Read the documentation
