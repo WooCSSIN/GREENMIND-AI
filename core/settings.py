@@ -1,6 +1,6 @@
 """
 Django settings for GreenMind WMS project.
-Version: 2.0 (Production-Ready with API, JWT, RBAC)
+Version: 3.0 (Real-Time + Docker + Redis + Channels)
 """
 
 from pathlib import Path
@@ -12,30 +12,26 @@ from dotenv import load_dotenv
 # BASE & ENV
 # ─────────────────────────────────────────────────
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Load biến môi trường từ file .env
 load_dotenv(BASE_DIR / ".env")
 
 import sys
-# Add apps and engine to python path
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 sys.path.insert(0, os.path.join(BASE_DIR, 'engine'))
 
 # ─────────────────────────────────────────────────
-# SECURITY (Đọc từ .env, KHÔNG để cứng trong code)
+# SECURITY
 # ─────────────────────────────────────────────────
 SECRET_KEY = os.getenv("SECRET_KEY", "fallback-insecure-key-please-set-env")
 DEBUG = os.getenv("DEBUG", "True") == "True"
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 env_csrf_origins = os.getenv("CSRF_TRUSTED_ORIGINS")
-CSRF_TRUSTED_ORIGINS = env_csrf_origins.split(",") if env_csrf_origins else ["http://localhost:8000", "http://127.0.0.1:8000"]
+CSRF_TRUSTED_ORIGINS = env_csrf_origins.split(",") if env_csrf_origins else [
+    "http://localhost:8000", "http://127.0.0.1:8000"
+]
 
-# ─────────────────────────────────────────────────
-# PRODUCTION SECURITY HEADERS (Strict check)
-# ─────────────────────────────────────────────────
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SESSION_COOKIE_SECURE = True
@@ -48,6 +44,7 @@ if not DEBUG:
 # APPLICATIONS
 # ─────────────────────────────────────────────────
 INSTALLED_APPS = [
+    "daphne",                                           # ASGI server (must be first)
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -59,7 +56,9 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
-    # Nội bộ
+    "channels",                                         # WebSocket support
+    "django_celery_beat",                               # Scheduled tasks
+    # Internal
     "apps.dashboard",
     "apps.api",
 ]
@@ -74,7 +73,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "core.middleware.security_logging.SecurityLoggingMiddleware", # Security Logging
+    "core.middleware.security_logging.SecurityLoggingMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -96,13 +95,71 @@ TEMPLATES = [
     },
 ]
 
+# ─────────────────────────────────────────────────
+# ASGI & WSGI
+# ─────────────────────────────────────────────────
 WSGI_APPLICATION = "core.wsgi.application"
+ASGI_APPLICATION = "core.asgi.application"
+
+# ─────────────────────────────────────────────────
+# DATABASE
+# ─────────────────────────────────────────────────
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+# ─────────────────────────────────────────────────
+# REDIS CONFIGURATION
+# ─────────────────────────────────────────────────
+REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+
+# ─────────────────────────────────────────────────
+# DJANGO CHANNELS (WebSocket)
+# ─────────────────────────────────────────────────
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [REDIS_URL],
+            "capacity": 1500,
+            "expiry": 10,
+        },
+    },
+}
+
+# ─────────────────────────────────────────────────
+# CELERY (Async Tasks)
+# ─────────────────────────────────────────────────
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "Asia/Ho_Chi_Minh"
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+# ─────────────────────────────────────────────────
+# CACHE (Redis)
+# ─────────────────────────────────────────────────
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": REDIS_URL,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+        "KEY_PREFIX": "greenmind",
+        "TIMEOUT": 3600,  # 1 hour default
+    }
+}
+
+# Cache timeouts (seconds)
+CACHE_TIMEOUT_FORECAST = 3600       # 1 hour - forecast results
+CACHE_TIMEOUT_SKU_LIST = 300        # 5 min - SKU list
+CACHE_TIMEOUT_DASHBOARD = 60        # 1 min - dashboard data
 
 # ─────────────────────────────────────────────────
 # PASSWORD VALIDATION
@@ -115,36 +172,32 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # ─────────────────────────────────────────────────
-# DJANGO REST FRAMEWORK (DRF) CONFIGURATION
+# DJANGO REST FRAMEWORK
 # ─────────────────────────────────────────────────
 REST_FRAMEWORK = {
-    # Mặc định dùng JWT cho mọi API endpoint
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    # Mặc định bắt buộc xác thực để truy cập API
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
-    # Cấu hình rate limiting chống DDoS/abuse
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
-        "core.throttling.IPBasedThrottle", # Add IP Based Throttle
+        "core.throttling.IPBasedThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "30/minute",    # Khách vãng lai: 30 req/phút
-        "user": "120/minute",   # Người dùng đã xác thực: 120 req/phút
-        "ip_anon": "100/hour",   # IP Based: 100 req/giờ
+        "anon": "30/minute",
+        "user": "120/minute",
+        "ip_anon": "100/hour",
     },
-    # Format response mặc định
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
     ],
 }
 
 # ─────────────────────────────────────────────────
-# JWT AUTHENTICATION SETTINGS
+# JWT
 # ─────────────────────────────────────────────────
 JWT_ACCESS_MINUTES = int(os.getenv("JWT_ACCESS_TOKEN_LIFETIME_MINUTES", 60))
 JWT_REFRESH_DAYS = int(os.getenv("JWT_REFRESH_TOKEN_LIFETIME_DAYS", 7))
@@ -152,8 +205,8 @@ JWT_REFRESH_DAYS = int(os.getenv("JWT_REFRESH_TOKEN_LIFETIME_DAYS", 7))
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=JWT_ACCESS_MINUTES),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=JWT_REFRESH_DAYS),
-    "ROTATE_REFRESH_TOKENS": True,      # Tự động xoay vòng refresh token
-    "BLACKLIST_AFTER_ROTATION": True,   # Vô hiệu hóa token cũ sau khi xoay
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": True,
     "ALGORITHM": "HS256",
     "AUTH_HEADER_TYPES": ("Bearer",),
@@ -163,33 +216,15 @@ SIMPLE_JWT = {
 }
 
 # ─────────────────────────────────────────────────
-# CORS (Cross-Origin Resource Sharing)
+# CORS
 # ─────────────────────────────────────────────────
-# Cho phép các frontend khác (React, Vue...) gọi API
-# Avoid CORS_ALLOW_ALL_ORIGINS even in DEBUG if possible, 
-# or at least make it configurable.
 env_cors_origins = os.getenv("CORS_ALLOWED_ORIGINS")
 if env_cors_origins:
     CORS_ALLOWED_ORIGINS = env_cors_origins.split(",")
 else:
-    CORS_ALLOWED_ORIGINS = [
-        "http://localhost:3000",  # React
-        "http://localhost:8080",  # Vue
-    ]
+    CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://localhost:8080"]
 
-if DEBUG and not env_cors_origins:
-    # Fallback for development if no env var set
-    CORS_ALLOW_ALL_ORIGINS = True
-else:
-    CORS_ALLOW_ALL_ORIGINS = False
-
-# ─────────────────────────────────────────────────
-# RBAC - CUSTOM USER ROLES (Lưu trong DB thông qua Profile)
-# ─────────────────────────────────────────────────
-# Role được quản lý qua Django's Group System:
-# - 'Admin'   : Toàn quyền (Thêm/Sửa/Xóa catalog, chạy simulator)
-# - 'Manager' : Chỉ xem dashboard, monitoring, esg reports
-# - 'Viewer'  : Chỉ xem báo cáo ESG công khai
+CORS_ALLOW_ALL_ORIGINS = DEBUG and not env_cors_origins
 
 # ─────────────────────────────────────────────────
 # INTERNATIONALIZATION
@@ -206,23 +241,26 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # ─────────────────────────────────────────────────
-# AUTHENTICATION REDIRECTS
+# AUTH REDIRECTS
 # ─────────────────────────────────────────────────
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # ─────────────────────────────────────────────────
-# LOGGING CONFIGURATION
+# LOGGING
 # ─────────────────────────────────────────────────
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {asctime} {message}',
             'style': '{',
         },
     },
@@ -235,6 +273,7 @@ LOGGING = {
         },
         'console': {
             'class': 'logging.StreamHandler',
+            'formatter': 'simple',
         },
     },
     'loggers': {
@@ -242,6 +281,14 @@ LOGGING = {
             'handlers': ['file', 'console'],
             'level': 'INFO',
             'propagate': True,
+        },
+        'channels': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'celery': {
+            'handlers': ['console'],
+            'level': 'INFO',
         },
     },
 }

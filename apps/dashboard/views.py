@@ -356,14 +356,27 @@ def simulator_view(request):
                 new_stock_level = inventory_service.process_outbound(sim_sku_val, sim_qty, sim_price, request.user.id)
             else:
                 new_stock_level = inventory_service.process_inbound(sim_sku_val, sim_qty, sim_price, request.user.id)
-            
-            # Reset cache để dashboard cập nhật biểu đồ ngay lập tức
-            # This ensures the next page load will fetch fresh data from database
+
+            # 1. Reset in-process engine cache
             reset_engine_cache()
+
+            # 2. Broadcast transaction immediately via WebSocket
+            from .tasks import broadcast_transaction, run_forecast_async
+            broadcast_transaction(
+                sku=sim_sku_val,
+                transaction_type=sim_type,
+                quantity=sim_qty,
+                new_stock=new_stock_level,
+                performed_by=request.user.username,
+            )
+
+            # 3. Trigger async forecast update (non-blocking)
+            run_forecast_async.delay(str(sim_sku_val))
+
             transaction_success = True
             messages.success(request, f"Giao dịch thành công! Tồn kho mới: {new_stock_level}")
-            logging.info(f"Transaction completed: {sim_type} SKU={sim_sku_val} Qty={sim_qty} by {request.user.username}")
-            
+            logging.info(f"Transaction: {sim_type} SKU={sim_sku_val} Qty={sim_qty} by {request.user.username}")
+
         except Exception as e:
             messages.error(request, sanitize_error(e, is_technical_admin(request.user)))
             logging.error(f"Transaction failed: {str(e)}", exc_info=True)
