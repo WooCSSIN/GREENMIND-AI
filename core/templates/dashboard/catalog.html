@@ -1,0 +1,276 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% load static %}
+
+{% block dashboard_content %}
+<div class="space-y-12 animate-in fade-in duration-1000">
+    
+    <!-- 📦 MASTER REGISTRY HERO -->
+    <div class="grid grid-cols-12 gap-8 items-center">
+        <div class="col-span-12 lg:col-span-8 flex flex-col gap-4">
+            <div class="flex items-center gap-4">
+                <div class="px-3 py-1 bg-brand-500/10 border border-brand-500/20 rounded-full text-[9px] font-black text-brand-500 uppercase tracking-widest flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                    Kho lưu trữ dữ liệu gốc
+                </div>
+            </div>
+            <h1 class="text-4xl font-black text-white italic uppercase tracking-tighter">Danh mục <span class="text-brand-500">Sản phẩm</span></h1>
+            <p class="text-xs text-gray-500 font-bold uppercase tracking-[0.2em] leading-relaxed max-w-2xl">
+                Quản lý toàn bộ mã SKU, hệ số CO2 và ngưỡng tồn kho an toàn. Quyền truy cập dành riêng cho <span class="text-white italic">Quản trị viên kho hàng</span>.
+            </p>
+        </div>
+        <div class="col-span-12 lg:col-span-4 flex justify-end gap-4">
+            {% if is_admin %}
+            <button onclick="document.getElementById('addModal').classList.remove('hidden')" class="px-8 py-5 bg-brand-500 hover:bg-brand-600 text-dark-950 font-black rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-95 shadow-2xl shadow-brand-500/20 text-[10px] uppercase tracking-widest">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+                Tạo mã SKU mới
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- 🔍 SEARCH & FILTER STRIP -->
+    <div class="flex flex-col md:flex-row gap-8 items-center">
+        <div class="relative w-full max-w-2xl group">
+            <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-gray-600 group-focus-within:text-brand-500 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+            <input type="text" id="searchInput" placeholder="Tìm kiếm tài liệu: Mã ID, Tên, Danh mục..." class="w-full bg-dark-950/50 border border-white/5 text-white text-[11px] font-mono rounded-2xl focus:border-brand-500/50 block pl-16 pr-8 py-5 placeholder-gray-700 transition-all outline-none italic tracking-widest">
+        </div>
+
+        <div class="flex items-center gap-4 bg-dark-950/30 p-2 rounded-2xl border border-white/5">
+            <button class="px-6 py-3 rounded-xl bg-brand-500/10 text-brand-500 border border-brand-500/20 text-[10px] font-black uppercase tracking-widest">TẤT CẢ SKU</button>
+            <button class="px-6 py-3 rounded-xl hover:bg-white/5 text-gray-600 text-[10px] font-black uppercase tracking-widest transition-all">CHỨNG NHẬN XANH</button>
+        </div>
+    </div>
+
+    <!-- 📑 HIGH-DENSITY DATA GRID -->
+    <div class="glass-panel rounded-[3rem] border-white/5 overflow-hidden bg-dark-900/40">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left" id="productTable">
+                <thead>
+                    <tr class="bg-dark-950/50">
+                        <th class="px-10 py-8 text-[9px] font-black text-gray-600 uppercase tracking-[0.3em]">Mã định danh (UID)</th>
+                        <th class="px-10 py-8 text-[9px] font-black text-gray-600 uppercase tracking-[0.3em]">Thông tin sản phẩm</th>
+                        <th class="px-10 py-8 text-[9px] font-black text-gray-600 uppercase tracking-[0.3em]">Hệ số Carbon (EF)</th>
+                        <th class="px-10 py-8 text-[9px] font-black text-gray-600 uppercase tracking-[0.3em]">Tồn kho an toàn</th>
+                        <th class="px-10 py-8 text-[9px] font-black text-gray-600 uppercase tracking-[0.3em] text-center">Quản trị Node</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/[0.03]">
+                    {% for p in products %}
+                    <tr class="hover:bg-brand-500/[0.02] transition-colors group">
+                        <td class="px-10 py-8">
+                            <span class="text-xs font-black text-brand-400 font-mono tracking-tighter">{{ p.ItemID }}</span>
+                        </td>
+                        <td class="px-10 py-8">
+                            <div class="flex flex-col gap-2">
+                                <span class="text-[13px] font-black text-white italic group-hover:text-brand-400 transition-colors uppercase tracking-tight">{{ p.ProductName }}</span>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-[9px] font-black text-gray-600 uppercase bg-dark-950 px-2 py-0.5 rounded border border-white/5 font-mono italic">{{ p.Category }}</span>
+                                    <span class="text-[8px] font-bold text-gray-700 uppercase tracking-widest">{{ p.Unit }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-10 py-8">
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-emerald-500 ai-glow-green"></div>
+                                <span class="text-lg font-black text-white font-mono tracking-tighter">{{ p.EmissionFactor }}</span>
+                                <span class="text-[9px] font-bold text-gray-600 uppercase italic">kgCO₂e</span>
+                            </div>
+                        </td>
+                        <td class="px-10 py-8">
+                            <div class="flex flex-col gap-2">
+                                <span class="text-lg font-black text-brand-400 font-mono italic tracking-tighter">{{ p.SafetyStockLevel|floatformat:0 }} <span class="text-[8px] text-gray-600 uppercase not-italic">Limit</span></span>
+                                <div class="w-20 h-1 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-brand-500/50 shadow-glow" style="width: 70%"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-10 py-8">
+                            <div class="flex items-center justify-center gap-4">
+                                {% if is_admin %}
+                                <button onclick="openEditModal('{{ p.ItemID }}', '{{ p.ProductName|escapejs }}', '{{ p.Category|escapejs }}', '{{ p.Unit|escapejs }}', '{{ p.EmissionFactor }}', '{{ p.SafetyStockLevel }}', '{{ p.ShelfRow }}', '{{ p.ShelfColumn }}')" class="p-4 bg-white/5 hover:bg-brand-500/10 text-gray-500 hover:text-brand-400 rounded-2xl border border-white/5 transition-all">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                    </svg>
+                                </button>
+                                <button onclick="confirmDelete('{{ p.ItemID }}', '{{ p.ProductName|escapejs }}')" class="p-4 bg-white/5 hover:bg-red-500/10 text-gray-500 hover:text-red-500 rounded-2xl border border-white/5 transition-all">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                                {% else %}
+                                <span class="text-[8px] font-black text-gray-700 uppercase italic tracking-widest border border-white/5 px-3 py-1 rounded-lg">READ_ONLY</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- ➕ MODAL SYSTEM (Add SKU) -->
+<div id="addModal" class="hidden fixed inset-0 bg-dark-950/95 backdrop-blur-xl z-[100] flex items-center justify-center p-8">
+    <div class="glass-panel rounded-[3rem] border-white/10 w-full max-w-2xl bg-dark-900 overflow-hidden animate-in zoom-in duration-500">
+        <div class="px-10 py-8 border-b border-white/5 flex justify-between items-center bg-dark-950/50">
+            <div>
+                <h3 class="text-2xl font-black text-white italic uppercase tracking-tighter">SKU Provisioning</h3>
+                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Master Data Initialization Protocol</p>
+            </div>
+            <button onclick="document.getElementById('addModal').classList.add('hidden')" class="w-12 h-12 rounded-full hover:bg-white/5 flex items-center justify-center text-gray-600 hover:text-white transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <form method="POST" class="p-10 space-y-8">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add">
+            
+            <div class="grid grid-cols-2 gap-8">
+                <div class="space-y-3">
+                    <label class="block text-[9px] font-black text-gray-600 uppercase tracking-[0.4em] pl-1">Unique Identifier (UID)</label>
+                    <input type="text" name="item_id" required class="w-full bg-dark-950 border border-white/10 rounded-2xl px-6 py-4 text-white font-mono text-xs focus:border-brand-500/50 outline-none transition-all">
+                </div>
+                <div class="space-y-3">
+                    <label class="block text-[9px] font-black text-gray-600 uppercase tracking-[0.4em] pl-1">Classification Cluster</label>
+                    <input type="text" name="category" required class="w-full bg-dark-950 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold text-xs focus:border-brand-500/50 outline-none transition-all">
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <label class="block text-[9px] font-black text-gray-600 uppercase tracking-[0.4em] pl-1">Product Designation</label>
+                <input type="text" name="name" required class="w-full bg-dark-950 border border-white/10 rounded-2xl px-6 py-4 text-white font-black italic uppercase tracking-tight text-sm focus:border-brand-500/50 outline-none transition-all">
+            </div>
+
+            <div class="grid grid-cols-3 gap-8">
+                <div class="space-y-3">
+                    <label class="block text-[9px] font-black text-gray-600 uppercase tracking-[0.4em] pl-1">Logic Unit</label>
+                    <input type="text" name="unit" required placeholder="Units, Kg..." class="w-full bg-dark-950 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold text-xs focus:border-brand-500/50 outline-none">
+                </div>
+                <div class="space-y-3">
+                    <label class="block text-[9px] font-black text-gray-600 uppercase tracking-[0.4em] pl-1">Emission Node</label>
+                    <input type="number" step="0.01" name="emission_factor" value="0.00" class="w-full bg-dark-950 border border-white/10 rounded-2xl px-6 py-4 text-white font-mono text-xs focus:border-brand-500/50 outline-none">
+                </div>
+                <div class="space-y-3">
+                    <label class="block text-[9px] font-black text-gray-600 uppercase tracking-[0.4em] pl-1">Buffer Threshold</label>
+                    <input type="number" name="safety_stock" value="50" class="w-full bg-dark-950 border border-white/10 rounded-2xl px-6 py-4 text-white font-mono text-xs focus:border-brand-500/50 outline-none">
+                </div>
+            </div>
+
+            <div class="pt-10 flex gap-6">
+                <button type="button" onclick="document.getElementById('addModal').classList.add('hidden')" class="flex-1 py-5 bg-white/5 text-gray-600 font-black rounded-2xl hover:bg-white/10 uppercase text-[10px] tracking-widest transition-all">TERMINATE</button>
+                <button type="submit" class="flex-1 py-5 bg-brand-500 text-dark-950 font-black rounded-2xl hover:bg-brand-600 uppercase text-[10px] tracking-widest transition-all shadow-2xl shadow-brand-500/30">COMMIT TO MASTER</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ✏️ MODAL SYSTEM (Edit SKU) -->
+<div id="editModal" class="hidden fixed inset-0 bg-dark-950/95 backdrop-blur-xl z-[100] flex items-center justify-center p-8">
+    <div class="glass-panel rounded-[3rem] border-white/10 w-full max-w-2xl bg-dark-900 overflow-hidden animate-in slide-in-from-bottom-8 duration-500">
+        <div class="px-10 py-8 border-b border-white/5 flex justify-between items-center bg-dark-950/50">
+            <div>
+                <h3 class="text-2xl font-black text-white italic uppercase tracking-tighter">Schema Update</h3>
+                <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Modifying Linked Record Identity</p>
+            </div>
+            <button onclick="document.getElementById('editModal').classList.add('hidden')" class="w-12 h-12 rounded-full hover:bg-white/5 flex items-center justify-center text-gray-600 hover:text-white transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <form method="POST" class="p-10 space-y-8">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="edit">
+            <input type="hidden" name="item_id" id="edit_item_id">
+            
+            <div class="flex items-center gap-4 p-4 bg-dark-950 rounded-2xl border border-white/5 opacity-60">
+                <div class="w-2 h-2 rounded-full bg-gray-600"></div>
+                <label class="text-[9px] font-black text-gray-700 uppercase tracking-widest">Immutable UID:</label>
+                <input type="text" id="edit_item_id_display" disabled class="bg-transparent border-none text-gray-600 font-mono text-xs focus:ring-0">
+            </div>
+
+            <div class="grid grid-cols-2 gap-8">
+                <div class="space-y-3">
+                    <label class="block text-[9px] font-black text-gray-600 uppercase tracking-[0.4em] pl-1">Classification cluster</label>
+                    <input type="text" name="category" id="edit_category" required class="w-full bg-dark-950 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold text-xs focus:border-brand-500/50 outline-none">
+                </div>
+                <div class="space-y-3">
+                    <label class="block text-[9px] font-black text-gray-600 uppercase tracking-[0.4em] pl-1">Logic Unit</label>
+                    <input type="text" name="unit" id="edit_unit" required class="w-full bg-dark-950 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold text-xs focus:border-brand-500/50 outline-none">
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <label class="block text-[9px] font-black text-gray-600 uppercase tracking-[0.4em] pl-1">Designation Label</label>
+                <input type="text" name="name" id="edit_name" required class="w-full bg-dark-950 border border-white/10 rounded-2xl px-6 py-4 text-white font-black italic uppercase text-sm focus:border-brand-500/50 outline-none">
+            </div>
+
+            <div class="grid grid-cols-2 gap-8">
+                <div class="space-y-3">
+                    <label class="block text-[9px] font-black text-gray-600 uppercase tracking-[0.4em] pl-1">Emission Factor</label>
+                    <input type="number" step="0.01" name="emission_factor" id="edit_ef" class="w-full bg-dark-950 border border-white/10 rounded-2xl px-6 py-4 text-white font-mono text-xs focus:border-brand-500/50">
+                </div>
+                <div class="space-y-3">
+                    <label class="block text-[9px] font-black text-gray-600 uppercase tracking-[0.4em] pl-1">Critical Stock Buffer</label>
+                    <input type="number" name="safety_stock" id="edit_ss" class="w-full bg-dark-950 border border-white/10 rounded-2xl px-6 py-4 text-white font-mono text-xs focus:border-brand-500/50">
+                </div>
+            </div>
+
+            <div class="pt-10 flex gap-6">
+                <button type="button" onclick="document.getElementById('editModal').classList.add('hidden')" class="flex-1 py-5 bg-white/5 text-gray-600 font-black rounded-2xl hover:bg-white/10 uppercase text-[10px] tracking-widest">ABORT</button>
+                <button type="submit" class="flex-1 py-5 bg-brand-400 text-dark-950 font-black rounded-2xl hover:bg-brand-500 uppercase text-[10px] tracking-widest transition-all shadow-2xl shadow-brand-400/30">UPDATE MASTER</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Local Search Logic
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        const term = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('#productTable tbody tr');
+        rows.forEach(row => {
+            const text = row.querySelector('.text-white')?.innerText.toLowerCase() || "";
+            const sku = row.querySelector('.text-brand-400')?.innerText.toLowerCase() || "";
+            row.style.display = (text.includes(term) || sku.includes(term)) ? '' : 'none';
+        });
+    });
+
+    function openEditModal(id, name, cat, unit, ef, ss, row, col) {
+        document.getElementById('edit_item_id').value = id;
+        document.getElementById('edit_item_id_display').value = id;
+        document.getElementById('edit_name').value = name;
+        document.getElementById('edit_category').value = cat;
+        document.getElementById('edit_unit').value = unit;
+        document.getElementById('edit_ef').value = ef;
+        document.getElementById('edit_ss').value = ss;
+        document.getElementById('editModal').classList.remove('hidden');
+    }
+
+    function confirmDelete(id, name) {
+        if (confirm(`SYSTEM PROTOCOL: Do you confirm the decommissioning of SKU: ${name} (UID: ${id})?`)) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.innerHTML = `
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="item_id" value="${id}">
+            `;
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
+{% endblock %}

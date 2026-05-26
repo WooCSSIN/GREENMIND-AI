@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="vi" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Intelligence Platform{% endblock %} - GreenMind AI</title>
+
+    <!-- FONTS: Inter for UI, JetBrains Mono for Data -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!-- ADAPTIVE TAILWIND CONFIG -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: { 
+                sans: ["Inter", "sans-serif"],
+                mono: ["JetBrains Mono", "monospace"]
+            },
+            colors: {
+              brand: {
+                50: "#ecfdf5", 400: "#34d399", 500: "#10b981", 600: "#059669", 900: "#064e3b",
+              },
+              dark: { 
+                600: "#334155", 700: "#1e293b", 800: "#0f172a", 900: "#020617", 950: "#010409",
+                border: "rgba(255,255,255,0.06)" 
+              },
+              accent: {
+                blue: "#3b82f6",
+                purple: "#8b5cf6"
+              }
+            },
+            backgroundImage: {
+              'grid-white': "url('data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"40\" height=\"40\" viewBox=\"0 0 40 40\"%3E%3Cpath d=\"M0 40L40 40L40 0\" fill=\"none\" stroke=\"white\" stroke-opacity=\"0.03\" stroke-width=\"1\"/%3E%3C/svg%3E')",
+            }
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* ENTERPRISE DESIGN TOKENS */
+      :root {
+        --glass-bg: rgba(15, 23, 42, 0.6);
+        --glass-border: rgba(255, 255, 255, 0.08);
+      }
+
+      body {
+        background-color: #020617;
+        color: #f8fafc;
+        overflow-x: hidden;
+      }
+
+      .glass-panel {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .glass-panel:hover {
+        border-color: rgba(16, 185, 129, 0.3);
+        background: rgba(15, 23, 42, 0.8);
+        box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+      }
+
+      /* AI DATA GLOWS */
+      .ai-glow-green { box-shadow: 0 0 40px -10px rgba(16, 185, 129, 0.2); }
+      .ai-glow-blue { box-shadow: 0 0 40px -10px rgba(59, 130, 246, 0.2); }
+
+      /* DATA LOADING PERFORMANCE SHIMMER */
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+      .skeleton {
+        background: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.03) 50%, transparent 75%);
+        background-size: 200% 100%;
+        animation: shimmer 2s infinite linear;
+      }
+
+      .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+      /* CUSTOM SCROLLBAR for Enterprise look */
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+      ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body class="bg-dark-900 text-slate-300 font-sans selection:bg-brand-500/30">
+    <div class="fixed inset-0 bg-grid-white pointer-events-none"></div>
+    {% block content %}{% endblock %}
+  </body>
+</html>

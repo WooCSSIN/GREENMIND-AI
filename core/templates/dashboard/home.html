@@ -1,0 +1,356 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% load static %}
+
+{% block dashboard_content %}
+<div class="space-y-10 animate-in fade-in duration-1000">
+    
+    <!-- 🟢 EXECUTIVE KPI STRIP -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Stock Integrity -->
+        <div class="glass-panel p-6 rounded-[2rem] relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-brand-500/5 rounded-full blur-2xl group-hover:bg-brand-500/10 transition-all"></div>
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center text-brand-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                </div>
+                <span class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Trạng thái tồn kho</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <span id="kpi-status-text" class="text-2xl font-black {{ status_color }} uppercase italic tracking-tighter">{{ status_text }}</span>
+            </div>
+            <div class="mt-4 flex items-center gap-2">
+                <div class="h-1 flex-1 bg-white/5 rounded-full overflow-hidden">
+                    <div class="h-full bg-brand-500 w-full animate-pulse"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Forecast Accuracy -->
+        <div class="glass-panel p-6 rounded-[2rem] relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-accent-blue/5 rounded-full blur-2xl group-hover:bg-accent-blue/10 transition-all"></div>
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-accent-blue/10 border border-accent-blue/20 flex items-center justify-center text-accent-blue">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <span class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Độ chính xác dự báo</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <span class="text-3xl font-black text-white font-mono tracking-tighter">98<span class="text-accent-blue">.5</span></span>
+                <span class="text-xs font-bold text-gray-500">%</span>
+            </div>
+            <p class="text-[9px] text-gray-600 font-bold uppercase mt-2">Model: <span id="kpi-champion-header" class="text-gray-400">{{ results.champion }}</span></p>
+        </div>
+
+        <!-- ESG Net Zero Impact -->
+        <div class="glass-panel p-6 rounded-[2rem] relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-all"></div>
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                </div>
+                <span class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Tác động môi trường ESG</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <span id="kpi-co2-header" class="text-3xl font-black text-white font-mono tracking-tighter">{{ results.future_co2_saving|floatformat:1 }}</span>
+                <span class="text-xs font-bold text-gray-500 italic">kg CO₂e</span>
+            </div>
+            <div class="mt-4 flex gap-1">
+                {% for i in "123456" %}
+                <div class="h-1 flex-1 bg-brand-500/30 rounded-full"></div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- System Latency -->
+        <div class="glass-panel p-6 rounded-[2rem] relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-purple-500/5 rounded-full blur-2xl group-hover:bg-purple-500/10 transition-all"></div>
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <span class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Thời gian phản hồi</span>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <span class="text-3xl font-black text-white font-mono tracking-tighter">142</span>
+                <span class="text-xs font-bold text-gray-500">ms</span>
+            </div>
+            <p class="text-[9px] text-gray-600 font-bold mt-2 uppercase">Máy chủ: <span class="text-green-500">Kết nối</span></p>
+        </div>
+    </div>
+
+    <!-- 📊 ANALYTICS CENTRAL HUB -->
+    <div class="grid grid-cols-12 gap-8 items-start">
+        
+        <!-- COLUMN 1: AI CONTROL & PARAMETERS (3/12) -->
+        <div class="col-span-12 lg:col-span-3 space-y-8">
+            <!-- SKU ENGINE CONTROLLER -->
+            <div class="glass-panel p-8 rounded-[2.5rem] border-white/5 relative group">
+                <div class="absolute inset-0 bg-brand-500/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-[2.5rem]"></div>
+                <div class="relative z-10">
+                    <label class="block text-[10px] font-black text-brand-500 uppercase tracking-[0.4em] mb-6">Chọn mã sản phẩm (SKU)</label>
+                    <div class="relative">
+                        <select id="sku-selector" class="w-full bg-dark-900 border border-white/10 rounded-2xl px-6 py-4 text-white font-black text-sm focus:ring-2 focus:ring-brand-500/30 outline-none transition-all appearance-none cursor-pointer hover:border-brand-500/50">
+                            {% for label, sku in sku_mapping.items %}
+                            <option value="{{ sku }}" {% if label == selected_label %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor font-bold">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </div>
+                        <div class="mt-6 p-4 rounded-xl bg-white/5 border border-white/5">
+                        <div class="flex justify-between text-[9px] font-black uppercase tracking-widest text-gray-600 mb-2">
+                            <span>Mã Engine</span>
+                            <span class="text-brand-500">GM-AI-X100</span>
+                        </div>
+                        <div class="flex justify-between text-[9px] font-black uppercase tracking-widest text-gray-600">
+                            <span>Lần huấn luyện cuối</span>
+                            <span class="text-gray-400">04/03/2026</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI BATTLE SPECS -->
+            <div class="glass-panel p-8 rounded-[2.5rem] border-white/5">
+                <h4 class="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em] mb-6">So sánh mô hình AI</h4>
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-[11px] font-black text-white uppercase tracking-tight">Mô hình tốt nhất</span>
+                            <span id="kpi-champion" class="text-xs font-bold text-accent-blue">{{ results.champion }}</span>
+                        </div>
+                        <div class="px-3 py-1 rounded bg-accent-blue/10 border border-accent-blue/20">
+                            <span id="kpi-mae-val" class="text-[11px] font-mono font-bold text-accent-blue">{{ results.champion_mae|floatformat:2 }}</span>
+                        </div>
+                    </div>
+                    <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full bg-accent-blue w-[92%]"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mt-6">
+                        <div class="p-4 rounded-2xl bg-dark-900 border border-white/5">
+                            <span class="text-[9px] font-black text-gray-600 uppercase block mb-1">Tổng MAE</span>
+                            <span class="text-sm font-black text-white font-mono">0.128</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-dark-900 border border-white/5">
+                            <span class="text-[9px] font-black text-gray-600 uppercase block mb-1">R² score</span>
+                            <span class="text-sm font-black text-brand-500 font-mono">0.96</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMN 2: PRIMARY INTELLIGENCE VIEW (6/12) -->
+        <div class="col-span-12 lg:col-span-6 space-y-8">
+            <!-- THE MAIN PREDICTION HUB -->
+            <div class="glass-panel rounded-[3rem] p-10 border-white/5 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand-500/50 to-transparent"></div>
+                
+                <div class="flex items-center justify-between mb-10">
+                    <div class="flex items-center gap-5">
+                        <div class="w-3 h-10 bg-brand-500 rounded-full ai-glow-green"></div>
+                        <div>
+                            <h2 class="text-2xl font-black text-white uppercase tracking-tight italic">Phân tích & Dự báo</h2>
+                            <p class="text-xs text-gray-500 font-bold">Dự báo chuỗi thời gian v2.5 — SARIMAX, Prophet, XGBoost</p>
+                        </div>
+                    </div>
+                    
+                    <div class="hidden md:flex items-center gap-2 p-1 bg-dark-900 rounded-xl border border-white/5">
+                        <button class="px-4 py-2 rounded-lg bg-brand-500 text-dark-950 text-[10px] font-black uppercase tracking-widest transition-all">30 Ngày</button>
+                        <button class="px-4 py-2 rounded-lg text-gray-500 text-[10px] font-black uppercase tracking-widest hover:text-white transition-all">Lịch sử</button>
+                    </div>
+                </div>
+
+                <!-- INFO ALERT (FOR LOW DATA) -->
+                <div id="data-warning" class="{% if is_enough_data %}hidden{% endif %} mb-8 p-6 rounded-3xl bg-orange-500/5 border border-orange-500/10 flex items-start gap-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <p class="text-xs text-orange-200/60 font-medium leading-relaxed italic" id="warning-text">
+                        {{ data_warning_msg }}
+                    </p>
+                </div>
+
+                <!-- 📊 THE CHART -->
+                <div id="chart-container" class="w-full relative min-h-[550px]" style="overflow: visible;">
+                    <div id="skeleton-chart" class="absolute inset-0 skeleton rounded-3xl z-0 hidden"></div>
+                    <div class="relative z-10 transition-all duration-700">
+                        {{ chart_html|safe }}
+                    </div>
+                </div>
+
+                <!-- INSIGHT FOOTER -->
+                <div class="mt-12 flex flex-col sm:flex-row items-center justify-between gap-6 pt-10 border-t border-white/5">
+                    <div class="flex items-center gap-6">
+                        <div class="flex flex-col">
+                            <span class="text-[9px] font-black text-gray-600 uppercase tracking-widest">Training Cycles</span>
+                            <span class="text-sm font-black text-white font-mono">1,204 Epochs</span>
+                        </div>
+                        <div class="w-[1px] h-8 bg-white/5"></div>
+                        <div class="flex flex-col">
+                            <span class="text-[9px] font-black text-gray-600 uppercase tracking-widest">Confidence Interval</span>
+                            <span class="text-sm font-black text-brand-400 font-mono">95% (Sigma-2)</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'simulator' %}?sku={{ selected_sku }}" id="link-simulator" class="w-full sm:w-auto px-10 py-5 bg-brand-500 hover:bg-brand-600 text-dark-950 font-black rounded-2xl flex items-center justify-center gap-4 transition-all hover:-translate-y-1 active:scale-95 shadow-xl shadow-brand-500/20">
+                        LAUNCH SIMULATOR
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMN 3: DSS & ENVIRONMENTAL (3/12) -->
+        <div class="col-span-12 lg:col-span-3 space-y-8">
+            
+            <!-- OPTIMIZATION METRICS -->
+            <div class="glass-panel p-8 rounded-[2.5rem] border-brand-500/20 bg-brand-500/5 items-center text-center group">
+                <div class="mb-8 p-6 rounded-3xl bg-dark-900 border border-white/5 relative">
+                    <div class="absolute -right-2 -top-2 flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-500"></span>
+                    </div>
+                    <span class="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em] block mb-4">Reorder Insight</span>
+                    <div class="flex justify-around items-end gap-2">
+                        <div class="flex flex-col">
+                            <span class="text-[9px] font-black text-gray-600 uppercase mb-2">Safety</span>
+                            <span id="kpi-ss" class="text-3xl font-black text-white font-mono tracking-tighter">{{ reco.safety_stock|floatformat:0 }}</span>
+                        </div>
+                        <div class="h-10 w-[1px] bg-white/10"></div>
+                        <div class="flex flex-col">
+                            <span class="text-[9px] font-black text-brand-500 uppercase mb-2">R.O.P</span>
+                            <span id="kpi-rop" class="text-4xl font-black text-brand-500 font-mono tracking-tighter">{{ reco.reorder_point|floatformat:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🍃 GREEN IMPACT -->
+                <div class="space-y-6">
+                    <div class="text-left space-y-4">
+                        <div class="p-5 rounded-2xl bg-dark-950/50 border border-white/5">
+                            <span class="text-[9px] font-black text-gray-500 uppercase tracking-widest block mb-2">Carbon Avoidance</span>
+                            <div class="flex items-center justify-between">
+                                <span id="kpi-co2" class="text-2xl font-black text-white font-mono">{{ results.future_co2_saving|floatformat:1 }}</span>
+                                <span class="text-[10px] font-bold text-brand-400">KG/YEAR</span>
+                            </div>
+                        </div>
+                        <div class="p-5 rounded-2xl bg-dark-950/50 border border-white/5">
+                            <span class="text-[9px] font-black text-gray-500 uppercase tracking-widest block mb-2">Sustainable Offset</span>
+                            <div class="flex items-center justify-between">
+                                <span id="kpi-trees" class="text-2xl font-black text-white font-mono">{{ results.trees_saving|floatformat:0 }}</span>
+                                <span class="text-[10px] font-bold text-emerald-500">TREES</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="{% url 'esg' %}" class="block w-full py-4 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black text-gray-400 hover:text-white transition-all uppercase tracking-[0.3em] border border-white/5 italic">
+                        View Net Zero Specs
+                    </a>
+                </div>
+            </div>
+
+            <!-- SYSTEM METRIC FOOTER -->
+            <div class="glass-panel p-8 rounded-[2.5rem] border-white/5">
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center group">
+                        <span class="text-[10px] font-bold text-gray-600 uppercase group-hover:text-gray-400 transition-colors">Lead-time Demand</span>
+                        <span id="metric-ltd" class="text-sm font-black text-white font-mono">{{ reco.lead_time_demand|floatformat:0 }}</span>
+                    </div>
+                    <div class="flex justify-between items-center group">
+                        <span class="text-[10px] font-bold text-gray-600 uppercase group-hover:text-gray-400 transition-colors">Tomorrow Predict</span>
+                        <span id="metric-tomorrow" class="text-sm font-black text-brand-400 font-mono">{{ tomorrow_stock|floatformat:0 }}</span>
+                    </div>
+                    <div class="pt-4 mt-4 border-t border-white/5">
+                        <button class="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 text-[10px] font-black uppercase tracking-widest transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            Sync Parameters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- 🧪 AI ENGINE SCRIPT FOR DYNAMIC UPDATES -->
+<script>
+document.getElementById('sku-selector').addEventListener('change', function() {
+    const selectedSku = this.value;
+    const chartContainer = document.getElementById('chart-container');
+    const skeleton = document.getElementById('skeleton-chart');
+    const url = new URL(window.location);
+    url.searchParams.set('sku', selectedSku);
+    window.history.pushState({}, '', url);
+
+    // AI Processing Visual Effect
+    if (chartContainer) {
+        chartContainer.querySelector('.relative.z-10').style.opacity = '0.3';
+        skeleton.classList.remove('hidden');
+    }
+
+    fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+    .then(response => {
+        if (!response.ok) throw new Error('System link failed');
+        return response.json();
+    })
+    .then(data => {
+        const plotlyDiv = chartContainer.querySelector('.plotly-graph-div');
+        skeleton.classList.add('hidden');
+        chartContainer.querySelector('.relative.z-10').style.opacity = '1';
+
+        if (plotlyDiv && data.chart_data) {
+            Plotly.react(plotlyDiv, data.chart_data, {
+                ...data.chart_layout,
+                uirevision: 'engine_update'
+            }, { displayModeBar: false, responsive: true });
+        } else if (data.chart_html) {
+            chartContainer.querySelector('.relative.z-10').innerHTML = data.chart_html;
+        }
+        
+        // 🧩 UPDATE SYSTEM NODES
+        document.getElementById('kpi-status-text').innerText = data.status_text;
+        document.getElementById('kpi-status-text').className = `text-2xl font-black ${data.status_color} uppercase italic tracking-tighter`;
+        
+        document.getElementById('kpi-ss').innerText = Math.round(data.reco.safety_stock).toLocaleString();
+        document.getElementById('kpi-rop').innerText = Math.round(data.reco.reorder_point).toLocaleString();
+        document.getElementById('kpi-champion').innerText = data.results.champion;
+        document.getElementById('kpi-champion-header').innerText = data.results.champion;
+        document.getElementById('kpi-mae-val').innerText = data.results.champion_mae.toFixed(2);
+        
+        document.getElementById('kpi-co2').innerText = data.results.future_co2_saving.toLocaleString(undefined, {minimumFractionDigits: 1});
+        document.getElementById('kpi-co2-header').innerText = data.results.future_co2_saving.toLocaleString(undefined, {minimumFractionDigits: 1});
+        document.getElementById('kpi-trees').innerText = Math.round(data.results.trees_saving).toLocaleString();
+        
+        document.getElementById('metric-ltd').innerText = Math.round(data.reco.lead_time_demand).toLocaleString();
+        document.getElementById('metric-tomorrow').innerText = Math.round(data.tomorrow_stock).toLocaleString();
+        
+        // Update Action Context
+        document.getElementById('link-simulator').href = `{% url 'simulator' %}?sku=${data.selected_sku}`;
+    })
+    .catch(error => {
+        console.error('System Error:', error);
+        skeleton.classList.add('hidden');
+        chartContainer.querySelector('.relative.z-10').style.opacity = '1';
+    });
+});
+</script>
+{% endblock %}

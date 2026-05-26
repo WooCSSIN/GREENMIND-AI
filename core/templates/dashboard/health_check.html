@@ -1,0 +1,173 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% load static %}
+
+{% block dashboard_content %}
+<div class="space-y-12 animate-in fade-in duration-1000">
+    
+    <!-- 🏥 DIAGNOSTICS COMMAND HEADER -->
+    <div class="grid grid-cols-12 gap-8 items-center">
+        <div class="col-span-12 lg:col-span-8 flex flex-col gap-4">
+            <div class="flex items-center gap-4">
+                <div class="px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-[9px] font-black text-indigo-400 uppercase tracking-widest flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></div>
+                    Quét chuyên sâu
+                </div>
+            </div>
+            <h1 class="text-4xl font-black text-white italic uppercase tracking-tighter">Trung tâm <span class="text-indigo-400">Chẩn đoán</span></h1>
+            <p class="text-xs text-gray-500 font-bold uppercase tracking-[0.2em] leading-relaxed max-w-2xl">
+                Kiểm tra tính toàn vẹn: biến môi trường, kết nối SQL Server và tình trạng AI. Chỉ dành cho <span class="text-white italic">Quản trị viên Hệ thống</span>.
+            </p>
+        </div>
+        <div class="col-span-12 lg:col-span-4 flex justify-end">
+            <form method="POST" action="{% url 'health_check' %}" class="relative">
+                {% csrf_token %}
+                <button type="submit" class="px-10 py-6 bg-brand-500 hover:bg-brand-600 text-dark-950 font-black rounded-2xl flex items-center justify-center gap-4 transition-all active:scale-95 shadow-2xl shadow-brand-500/30 text-[10px] uppercase tracking-widest group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:rotate-180 duration-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Chạy chẩn đoán ngay
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 📊 AUDIT RESULTS -->
+    {% if hc_results %}
+    <div class="space-y-10">
+        
+        <!-- Summary State Panel -->
+        <div class="glass-panel p-10 rounded-[3rem] border-white/5 relative overflow-hidden bg-dark-900/40">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-12 pb-10 border-b border-white/5">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-2xl font-black text-white italic uppercase tracking-tighter">Kết quả tổng quan</h3>
+                        {% if hc_results.log_id %}
+                        <span class="text-[9px] font-black font-mono text-gray-600 border border-white/5 px-3 py-1 rounded-lg">ID: {{ hc_results.log_id }}</span>
+                        {% endif %}
+                    </div>
+                    <span class="text-[9px] font-bold text-gray-500 uppercase tracking-widest font-mono italic">THỜI GIAN: {% now "H:i:s • d/m/Y" %}</span>
+                </div>
+                
+                <div>
+                    {% if hc_results.status == 'OK' %}
+                    <div class="px-10 py-4 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-2xl font-black text-xs uppercase tracking-[0.3em] flex items-center gap-4">
+                         <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 ai-glow-green"></div>
+                         Trạng thái: Hoạt động bình thường
+                    </div>
+                    {% else %}
+                    <div class="px-10 py-4 bg-red-500/10 border border-red-500/30 text-red-500 rounded-2xl font-black text-xs uppercase tracking-[0.3em] flex items-center gap-4">
+                         <div class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></div>
+                         Trạng thái: Lỗi nghiêm trọng
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Vector Categories -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                
+                <!-- Environment Domain -->
+                <div class="space-y-8">
+                    <div class="flex items-center gap-4 pb-6 border-b border-white/5">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 border border-indigo-500/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
+                        <h4 class="text-[10px] font-black text-gray-600 uppercase tracking-[0.3em]">Môi trường & Biến cấu hình</h4>
+                    </div>
+                    <ul class="space-y-4 font-mono text-[9px]">
+                        {% for d in hc_results.env_vars.details %}
+                        <li class="flex items-start gap-4 text-gray-600 leading-relaxed group">
+                            {% if '❌' in d %}
+                            <span class="text-red-500 font-black px-2 py-0.5 bg-red-500/5 rounded border border-red-500/10">ERR</span>
+                            {% else %}
+                            <span class="text-emerald-500 font-black px-2 py-0.5 bg-emerald-500/5 rounded border border-emerald-500/10">OK</span>
+                            {% endif %}
+                            <span class="mt-1 group-hover:text-white transition-colors uppercase tracking-tight">{{ d|slice:"2:" }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Data Persistence Domain -->
+                <div class="space-y-8">
+                    <div class="flex items-center gap-4 pb-6 border-b border-white/5">
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 border border-blue-500/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                            </svg>
+                        </div>
+                        <h4 class="text-[10px] font-black text-gray-600 uppercase tracking-[0.3em]">Cơ sở dữ liệu SQL</h4>
+                    </div>
+                    <ul class="space-y-4 font-mono text-[9px]">
+                        {% for d in hc_results.database.details %}
+                        <li class="flex items-start gap-4 text-gray-600 leading-relaxed group">
+                            {% if '❌' in d %}
+                            <span class="text-red-500 font-black px-2 py-0.5 bg-red-500/5 rounded border border-red-500/10">FAIL</span>
+                            {% else %}
+                            <span class="text-emerald-500 font-black px-2 py-0.5 bg-emerald-500/5 rounded border border-emerald-500/10">PASS</span>
+                            {% endif %}
+                            <span class="mt-1 group-hover:text-white transition-colors uppercase tracking-tight">{{ d|slice:"2:" }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Intelligence Pipeline Domain -->
+                <div class="space-y-8">
+                    <div class="flex items-center gap-4 pb-6 border-b border-white/5">
+                        <div class="w-10 h-10 rounded-xl bg-brand-500/10 flex items-center justify-center text-brand-400 border border-brand-500/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <h4 class="text-[10px] font-black text-gray-600 uppercase tracking-[0.3em]">AI Pipeline & Mô hình</h4>
+                    </div>
+                    <ul class="space-y-4 font-mono text-[9px]">
+                        {% for d in hc_results.ai_pipeline.details %}
+                        <li class="flex items-start gap-4 text-gray-600 leading-relaxed group">
+                            {% if '❌' in d %}
+                            <span class="text-red-500 font-black px-2 py-0.5 bg-red-500/5 rounded border border-red-500/10">CRIT</span>
+                            {% elif '⚠️' in d %}
+                            <span class="text-orange-500 font-black px-2 py-0.5 bg-orange-500/5 rounded border border-orange-500/10">WARN</span>
+                            {% else %}
+                            <span class="text-emerald-500 font-black px-2 py-0.5 bg-emerald-500/5 rounded border border-emerald-500/10">NOMN</span>
+                            {% endif %}
+                            <span class="mt-1 group-hover:text-white transition-colors uppercase tracking-tight">{{ d|slice:"2:" }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Validation Badges -->
+            <div class="mt-16 pt-10 border-t border-white/5 flex items-center justify-between">
+                <p class="text-[9px] font-black text-gray-700 uppercase tracking-[0.4em] italic font-mono">System Engine Protocol: v4.2.0-STABLE</p>
+                <div class="flex items-center gap-6 opacity-30">
+                    <div class="px-3 py-1 bg-white/5 border border-white/10 rounded font-mono text-[8px] font-black text-white italic">SQL_SERVER_READY</div>
+                    <div class="px-3 py-1 bg-white/5 border border-white/10 rounded font-mono text-[8px] font-black text-white italic">MODEL_CACHE_OK</div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <!-- IDLE STATE -->
+        <div class="glass-panel p-24 text-center rounded-[3rem] border border-white/5 bg-dark-900/50 flex flex-col items-center justify-center space-y-10 group cursor-default">
+            <div class="w-24 h-24 bg-dark-950 rounded-full flex items-center justify-center text-gray-700 border border-white/5 relative">
+                <div class="absolute inset-0 bg-brand-500/5 rounded-full animate-ping group-hover:bg-brand-500/10 transition-all"></div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11V3m0 0L9 6m3-3l3 3m-3 8v6m0 0l-3-3m3 3l3-3M3 12h6m0 0l-3-3m3 3l-3 3m15-3h-6m0 0l3-3m-3 3l3 3" />
+                </svg>
+            </div>
+            <div class="space-y-4">
+                <h3 class="text-2xl font-black text-white italic uppercase tracking-tighter">Chẩn đoán: Sẵn sàng</h3>
+                <p class="text-[10px] text-gray-600 font-bold uppercase tracking-[0.4em] max-w-sm mx-auto leading-relaxed">
+                    Nhấn nút “Chạy chẩn đoán” để kiểm tra toàn bộ cấu hình hệ thống.
+                </p>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

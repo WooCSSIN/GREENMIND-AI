@@ -1,0 +1,30 @@
+# GreenMind - Python Dependencies
+# Generated: 2026-02-26
+
+# ─── Core Web Framework ───────────────────────────────────────────────────────
+Django>=6.0.1
+djangorestframework>=3.16.0
+djangorestframework-simplejwt>=5.5.0
+django-cors-headers>=4.9.0
+
+# ─── Security & Config ────────────────────────────────────────────────────────
+python-dotenv>=1.2.0
+PyJWT>=2.11.0
+
+# ─── AI / ML ─────────────────────────────────────────────────────────────────
+prophet>=1.1.5
+xgboost>=2.0.0
+statsmodels>=0.14.0
+scikit-learn>=1.4.0
+pandas>=2.2.0
+numpy>=1.26.0
+
+# ─── Database ─────────────────────────────────────────────────────────────────
+SQLAlchemy>=2.0.0
+pyodbc>=5.0.0
+
+# ─── Visualization ────────────────────────────────────────────────────────────
+plotly>=5.20.0
+
+# ─── Streamlit (Legacy interface) ─────────────────────────────────────────────
+streamlit>=1.30.0

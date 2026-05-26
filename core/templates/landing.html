@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    @keyframes slow-pan {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    .text-gradient {
+        background: linear-gradient(to bottom, #fff 0%, #94a3b8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .brand-glow {
+        filter: drop-shadow(0 0 30px rgba(16, 185, 129, 0.4));
+    }
+    .grid-bg {
+        background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+        background-size: 50px 50px;
+    }
+</style>
+
+<!-- 🌌 SOVEREIGN INTELLIGENCE HERO -->
+<div class="min-h-screen flex flex-col items-center justify-center bg-dark-950 text-white px-8 relative overflow-hidden">
+    <!-- Infrastructure Visuals -->
+    <div class="absolute inset-0 grid-bg opacity-30"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-gradient-to-b from-brand-500/[0.03] to-transparent"></div>
+    <div class="absolute -top-40 -left-40 w-[600px] h-[600px] bg-brand-500/10 rounded-full blur-[150px] animate-pulse"></div>
+    <div class="absolute -bottom-40 -right-40 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[150px] animate-pulse" style="animation-delay: 2s;"></div>
+    
+    <div class="max-w-7xl w-full text-center relative z-10 space-y-12">
+        <!-- System Identifier -->
+        <div class="inline-flex items-center gap-4 px-6 py-2 rounded-full bg-dark-900 border border-white/5 shadow-2xl animate-in slide-in-from-top-4 duration-1000">
+            <span class="flex h-2 w-2 relative">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
+            </span>
+            <span class="text-[9px] font-black text-gray-500 uppercase tracking-[0.5em] font-mono italic">Protocol_v4.2.0_Online</span>
+        </div>
+
+        <!-- Headline Architecture -->
+        <div class="space-y-6">
+            <h1 class="text-7xl md:text-[10rem] font-black tracking-tighter leading-[0.85] uppercase italic">
+                <span class="text-gradient">Green</span><br>
+                <span class="text-brand-500 brand-glow">Mind AI</span>
+            </h1>
+            <p class="text-[11px] text-gray-600 font-bold uppercase tracking-[0.6em] max-w-2xl mx-auto leading-relaxed italic">
+                Next-gen autonomous logistics interface. Neural forecasting meets sovereign sustainability.
+            </p>
+        </div>
+
+        <!-- Action Matrix -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-10 pt-10">
+            <a href="{% url 'login' %}" class="group relative">
+                <div class="absolute -inset-1 bg-brand-500 rounded-3xl blur opacity-20 group-hover:opacity-50 transition duration-700"></div>
+                <button class="relative px-16 py-7 bg-brand-500 text-dark-950 font-black rounded-3xl flex items-center justify-center gap-4 transition-all hover:-translate-y-1 active:scale-95 text-[11px] uppercase tracking-[0.3em] italic shadow-2xl shadow-brand-500/30">
+                    Enter_Terminal
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transition-transform group-hover:translate-x-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                </button>
+            </a>
+            <a href="#intel" class="px-16 py-7 bg-white/[0.03] hover:bg-white/[0.08] text-white font-black rounded-3xl border border-white/10 transition-all uppercase tracking-[0.3em] text-[11px] italic backdrop-blur-3xl">
+                Core_Logic
+            </a>
+        </div>
+
+        <!-- Technical Benchmarks -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-12 pt-32 border-t border-white/5 max-w-5xl mx-auto">
+            <div class="space-y-2">
+                <div class="text-4xl font-black text-white italic tracking-tighter">98.5%</div>
+                <div class="text-[9px] text-gray-700 font-black uppercase tracking-widest font-mono">Prediction_Accuracy</div>
+            </div>
+            <div class="space-y-2">
+                <div class="text-4xl font-black text-brand-500 italic tracking-tighter">-30%</div>
+                <div class="text-[9px] text-gray-700 font-black uppercase tracking-widest font-mono">Carbon_Inertia_Redux</div>
+            </div>
+            <div class="space-y-2">
+                <div class="text-4xl font-black text-blue-500 italic tracking-tighter">Real-Time</div>
+                <div class="text-[9px] text-gray-700 font-black uppercase tracking-widest font-mono">Synchronous_Ops</div>
+            </div>
+            <div class="space-y-2">
+                <div class="text-4xl font-black text-purple-500 italic tracking-tighter">ISO_26</div>
+                <div class="text-[9px] text-gray-700 font-black uppercase tracking-widest font-mono">ESG_Compliance</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-10 flex flex-col items-center gap-4 opacity-30">
+        <div class="w-px h-20 bg-gradient-to-b from-brand-500 to-transparent"></div>
+    </div>
+</div>
+
+<!-- 🧪 INTELLIGENCE LAYER (Battle of Models) -->
+<div id="intel" class="py-40 bg-dark-900/50 relative overflow-hidden px-8 border-y border-white/5">
+    <div class="max-w-7xl mx-auto space-y-32">
+        <div class="text-center space-y-6">
+            <h2 class="text-5xl font-black text-white italic uppercase tracking-tighter">Battle of <span class="text-brand-500">Neural Nodes</span></h2>
+            <p class="text-xs text-gray-600 font-bold uppercase tracking-[0.4em] max-w-xl mx-auto italic leading-relaxed">Cross-validation between sovereign algorithms ensures absolute data integrity.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <!-- SARIMAX -->
+            <div class="glass-panel p-16 rounded-[4rem] border-white/5 relative group transition-all hover:bg-white/[0.03]">
+                <div class="absolute top-10 right-10 w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]"></div>
+                <h4 class="text-[10px] text-indigo-400 font-black uppercase tracking-[0.4em] mb-8 font-mono">Node_01 // TS-ADV</h4>
+                <h3 class="text-4xl font-black text-white italic tracking-tighter mb-8 uppercase">Sarimax</h3>
+                <p class="text-xs text-gray-500 leading-relaxed font-bold uppercase tracking-widest mb-12">Statistical seasonal decomposition. Pure mathematical precision for cyclical inventory patterns.</p>
+                <div class="space-y-4">
+                    <div class="flex justify-between text-[9px] font-black uppercase tracking-widest text-indigo-400 opacity-50">
+                        <span>Reliability</span>
+                        <span>85.4%</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                        <div class="w-[85%] h-full bg-indigo-500"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROPHET -->
+            <div class="glass-panel p-16 rounded-[4rem] border-brand-500/20 bg-brand-500/[0.03] relative group transition-all">
+                <div class="absolute top-10 right-10 w-1.5 h-1.5 rounded-full bg-brand-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
+                <h4 class="text-[10px] text-brand-400 font-black uppercase tracking-[0.4em] mb-8 font-mono">Node_02 // ADAPTIVE</h4>
+                <h3 class="text-4xl font-black text-white italic tracking-tighter mb-8 uppercase">Prophet</h3>
+                <p class="text-xs text-gray-400 leading-relaxed font-bold uppercase tracking-widest mb-12">Evolutionary trend detection. Expertly handles market holidays and complex seasonality noise.</p>
+                <div class="space-y-4">
+                    <div class="flex justify-between text-[9px] font-black uppercase tracking-widest text-brand-400">
+                        <span>Versatility</span>
+                        <span>92.1%</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-brand-500/20 rounded-full overflow-hidden">
+                        <div class="w-[92%] h-full bg-brand-500 shadow-[0_0_15px_rgba(16,185,129,0.4)]"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- XGBOOST -->
+            <div class="glass-panel p-16 rounded-[4rem] border-white/5 relative group transition-all hover:bg-white/[0.03]">
+                <div class="absolute top-10 right-10 w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
+                <h4 class="text-[10px] text-blue-400 font-black uppercase tracking-[0.4em] mb-8 font-mono">Node_03 // HEAVY</h4>
+                <h3 class="text-4xl font-black text-white italic tracking-tighter mb-8 uppercase">XGBoost</h3>
+                <p class="text-xs text-gray-500 leading-relaxed font-bold uppercase tracking-widest mb-12">Multi-variable decision trees. High-performance analysis of external market influences.</p>
+                <div class="space-y-4">
+                    <div class="flex justify-between text-[9px] font-black uppercase tracking-widest text-blue-400 opacity-50">
+                        <span>Calculation_Power</span>
+                        <span>98.6%</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                        <div class="w-[98%] h-full bg-blue-500"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 📢 TERMINATE SEQUENCE & FOOTER -->
+<div class="py-60 bg-dark-950 px-8 text-center relative overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] bg-brand-500/[0.03] blur-[150px] rounded-full"></div>
+    <div class="max-w-4xl mx-auto relative z-10 space-y-16">
+        <h2 class="text-6xl md:text-8xl font-black text-white italic tracking-tighter uppercase leading-[0.9]">Autonomous <br><span class="text-brand-500 brand-glow">Future</span> Starts_Now</h2>
+        <a href="{% url 'login' %}" class="inline-flex items-center gap-6 bg-brand-500 hover:bg-brand-600 text-dark-950 px-24 py-8 rounded-[2.5rem] font-black shadow-2xl shadow-brand-500/30 transform hover:-translate-y-2 transition-all group text-[11px] uppercase tracking-[0.4em] italic leading-none">
+            Provision_Access
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:rotate-45 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+        </a>
+        <div class="pt-32 flex flex-wrap justify-center gap-x-16 gap-y-8">
+            <a href="#" class="text-[9px] text-gray-700 hover:text-white transition-colors font-black uppercase tracking-[0.4em]">Intel_Repository</a>
+            <a href="#" class="text-[9px] text-gray-700 hover:text-white transition-colors font-black uppercase tracking-[0.4em]">ESG_Standard</a>
+            <a href="#" class="text-[9px] text-gray-700 hover:text-white transition-colors font-black uppercase tracking-[0.4em]">Sec_Policy</a>
+        </div>
+        <div class="pt-10 flex flex-col items-center gap-4">
+            <div class="w-8 h-px bg-white/10"></div>
+            <p class="text-[10px] text-gray-800 font-black uppercase tracking-[0.6em] italic">GreenMind_Global_Ops_Network</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

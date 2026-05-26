@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex h-screen overflow-hidden bg-dark-950">
+    <!-- 🧭 SIDEBAR COMPONENT -->
+    {% include "dashboard/sidebar.html" %}
+
+    <!-- 🚀 MAIN OPERATIONAL VIEW -->
+    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-dark-950 text-slate-300 hidden-scrollbar relative">
+        <!-- Technical Grid Background -->
+        <div class="absolute inset-0 bg-grid-white opacity-20 pointer-events-none"></div>
+        <div class="absolute top-0 right-0 w-[800px] h-[600px] bg-brand-500/5 rounded-full blur-[150px] pointer-events-none"></div>
+
+        <div class="p-8 lg:p-12 relative z-10 w-full max-w-[1600px] mx-auto pb-32">
+            <!-- 📟 TIÊU ĐỀ TRANG -->
+            <header class="mb-12 border-b border-white/5 pb-10">
+                <div class="flex flex-col xl:flex-row xl:items-end justify-between gap-8">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="px-3 py-1 rounded bg-brand-500/10 border border-brand-500/20">
+                                <span class="text-[10px] font-black text-brand-400 uppercase tracking-widest">GreenMind AI</span>
+                            </div>
+                            <span class="text-gray-600 font-mono text-xs">/ hệ thống / {{ active_page }}</span>
+                        </div>
+                        <h1 class="text-4xl xl:text-5xl font-black tracking-tighter text-white uppercase italic">
+                            {{ page_title }}
+                        </h1>
+                        <p class="text-gray-500 font-medium text-sm leading-relaxed max-w-2xl border-l-2 border-brand-500/30 pl-6">
+                            {{ subtitle }}
+                        </p>
+                    </div>
+                    
+                    <!-- Global Actions Slot -->
+                    <div class="flex items-center gap-4">
+                        {% block header_actions %}{% endblock %}
+                    </div>
+                </div>
+            </header>
+
+            <!-- 📊 DYNAMIC CONTENT LAYER -->
+            <div class="w-full">
+                {% block dashboard_content %}{% endblock %}
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

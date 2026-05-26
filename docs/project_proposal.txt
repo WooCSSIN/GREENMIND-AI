@@ -1,0 +1,174 @@
+
+TRƯỜNG ĐẠI HỌC GIAO THÔNG 
+VẬN TẢI TP. HỒ CHÍ MINH
+VIỆN CÔNG NGHỆ THÔNG TIN VÀ ĐIỆN, ĐIỆN TỬ
+CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc
+
+
+
+PHIẾU ĐĂNG KÝ, THUYẾT MINH ĐỀ TÀI THAM GIA CUỘC THI
+SINH VIÊN NGHIÊN CỨU KHOA HỌC VÀ ĐỔI MỚI SÁNG TẠO 
+ NĂM HỌC 2025-2026
+
+	Tên đề tài
+	GreenMind: Hệ thống Dự báo Thông minh Tự thích nghi cho Quản lý Kho Logistics Xanh Việt Nam	
+		
+		
+	Lĩnh vực nghiên cứu
+Hệ thống thông minh, tự động hóa
+
+	Trí tuệ nhân tạo và Học máy
+×
+	Robotics và IoT
+
+	Dữ liệu lớn và Khoa học dữ liệu
+
+	An toàn thông tin và Blockchain
+
+	Công nghệ phần mềm và hệ thống thống minh
+
+	Hệ thống thông tin quản lý, chuyển đổi số và quản trị công nghệ
+
+	Hệ thống xử lý dữ liệu, điều khiển và giám sát
+
+	Các giải pháp công nghệ mang tính sáng tạo và ứng dụng thực tiễn
+
+	Thông tin nhóm đăng ký
+	Thông tin các thành viên tham gia đề tài 
+STT
+MSSV
+Họ và tên
+Chuyên ngành đang theo học
+Số điện thoại
+Vai trò
+1
+046205006145
+Hà  Nhật Nguyên Vũ
+Hệ Thống Thông Tin Quản Lý
+0909914205
+Nhóm trưởng
+2
+060205011928
+Nguyễn Văn Tới
+Khoa Học Dữ Liệu
+0333964495
+Thành viên
+3
+068305006913
+Nguyễn Đào Kiều Dung
+Logistics và quản lý chuỗi cung ứng
+0966540631
+Thành viên
+4
+079205004676
+Lê Huỳnh Quang Minh
+Quản lý an toàn và môi trường
+0988078165
+Thành viên
+5
+
+
+
+
+
+	Thông tin Giảng viên hướng dẫn(nếu có)
+	Họ và tên giảng viên hướng dẫn:
+	Học hàm, học vị:
+	Đơn vị công tác:
+	Email:
+	Số điện thoại:
+
+
+	Thuyết minh đề tài 
+	Tổng quan
+	Bối cảnh và hiện trạng nghiên cứu: 
+	Cả thế giới đang chạy đua về kinh tế tuần hoàn, và ngành logistics cũng đã thay đổi chóng mặt. Bây giờ, logistics chẳng còn là “người vận chuyển” đơn thuần nữa – nó là trung tâm mọi chiến lược phát triển bền vững. Thương mại điện tử bùng lên dữ dội, FDI đổ vào liên tục, kéo theo nhu cầu kho bãi hiện đại tăng vọt, đặc biệt ở những nước như Việt Nam. Nhưng đi cùng với tốc độ này là hàng loạt vấn đề môi trường đau đầu. Nhiều nghiên cứu chỉ ra: riêng hoạt động kho bãi đã chiếm khoảng 11% tổng phát thải của ngành logistics toàn cầu, chủ yếu từ điện chiếu sáng, điều hòa, rồi cả những thiết bị nâng hạ chạy xăng dầu hoặc điện.
+	Các công trình liên quan và hạn chế:
+	Ở Việt Nam, “xanh hóa” logistics vừa là cơ hội lớn, vừa là thách thức không nhỏ. Báo cáo Logistics Việt Nam 2024–2025 khẳng định: muốn cạnh tranh, phải phát triển logistics xanh và logistics số. Các cam kết quốc tế như Net Zero 2050, rồi cả tiêu chuẩn nhập khẩu ngặt nghèo từ EU (CBAM) đang tạo áp lực khổng lồ lên các doanh nghiệp nội. Thực tế, hơn 80% doanh nghiệp Việt Nam đã chú ý đến môi trường, nhưng chỉ dưới 10% thực sự ứng dụng công nghệ để quản lý, theo dõi phát thải một cách bài bản.
+	Khoảng trống nghiên cứu: 
+	Dù các mô hình dự báo đã phát triển khá nhiều, nhưng việc tích hợp đa mô hình (SARIMA, Prophet, XGBoost) cùng thuật toán Di truyền (GA) vào một hệ thống quản lý kho xanh hoàn chỉnh ở Việt Nam vẫn còn rất hiếm. Đặc biệt, gần như chưa có nghiên cứu nào so sánh các kịch bản “Green Scenario” dựa trên sai số MAPE để chọn mô hình tối ưu. 
+	Lý do chọn đề tài: 
+	Tôi chọn đề tài “Xây dựng hệ thống quản lý kho logistics xanh ứng dụng phân tích dữ liệu” vì ba lý do rất rõ ràng. Đầu tiên, doanh nghiệp Việt Nam đang đối mặt với yêu cầu quốc tế ngày càng gắt gao. Những rào cản kỹ thuật như CBAM buộc các công ty phải minh bạch về phát thải carbon. Nếu không có hệ thống đo lường đáng tin, doanh nghiệp Việt rất dễ bị loại khỏi chuỗi cung ứng toàn cầu. Thứ hai là bài toán chi phí. Logistics ở Việt Nam ngốn tới 18% GDP, phần lớn do kho bãi còn quản lý thủ công. Chỉ cần tối ưu tồn kho bằng dữ liệu, doanh nghiệp có thể tiết kiệm 10-15% năng lượng mà không cần đầu tư thêm hạ tầng mới. Thứ ba, chuyển đổi số bền vững giờ đã là yêu cầu bắt buộc từ chính phủ và các tập đoàn lớn. Đề tài này lấp đúng khoảng trống kỹ thuật, mang tới giải pháp thực tế, có thể ứng dụng ngay cho doanh nghiệp vừa và lớn.
+	Tính cấp thiết của đề tài
+	Nhu cầu thực tiễn cho đề tài này quá rõ ràng, thể hiện bằng những con số cụ thể: Hiện nay, 60-70% doanh nghiệp logistics ở Việt Nam vẫn quản lý kho thủ công hoặc bán tự động, phụ thuộc nhiều vào kinh nghiệm cá nhân. Hậu quả là lãng phí không gian, tiêu tốn điện cho chiếu sáng, làm mát cả những khu vực không cần thiết – có thể lên tới 15-20%. Giá điện tăng liên tục, doanh nghiệp càng thêm áp lực. Thất thoát hàng hóa cũng là vấn đề nhức nhối: riêng các kho FMCG, tỷ lệ thất thoát chiếm tầm 2-2,5% doanh thu. Ở góc nhìn logistics xanh, mỗi sản phẩm bị mất không chỉ là mất tiền mà còn là phát thải CO₂ vô ích cho cả chuỗi sản xuất và vận chuyển. Một hệ thống GWMS giám sát thời gian thực, kiểm soát chặt FIFO/FEFO, kiểm kê vòng lặp sẽ giảm mạnh rủi ro này. Muốn xuất khẩu vào EU hay Mỹ, doanh nghiệp Việt buộc phải chứng minh cam kết ESG. Nếu không có hệ thống đo lường phát thải carbon minh bạch, họ sẽ vấp phải rào cản lớn từ 2025–2030. Ở phía nhà nước, Chiến lược phát triển logistics Việt Nam đến 2035 (Quyết định 2229/QĐ-TTg) cũng xác định logistics xanh là hạ tầng bắt buộc. Đề tài này chính là một bước cụ thể hóa mục tiêu đó bằng giải pháp kỹ thuật thực tế.
+	
+	Tính mới, sáng tạo của đề tài
+	Cái mới không chỉ nằm ở công nghệ mà còn ở tư duy quản trị – chuyển từ “quản trị chi phí” sang “quản trị tài nguyên carbon”. Điểm sáng tạo nổi bật là mô hình dự báo Hybrid, kết hợp Prophet, XGBoost và tối ưu hóa Bayesian. Thực tế, thị trường Việt Nam biến động rất mạnh (đợt lễ, Tết, FDI...), các mô hình thống kê truyền thống dễ sai lệch. Prophet xử lý tốt yếu tố mùa vụ, xu hướng dài hạn; XGBoost nhận diện những ảnh hưởng phi tuyến, nhiễu từ bên ngoài; tối ưu hóa Bayesian tự động điều chỉnh siêu tham số, không cần chuyên gia can thiệp liên tục. Nhờ vậy, sai số MAPE giữ ở mức 6–18%, đáp ứng yêu cầu tối ưu tồn kho an toàn và giảm lãng phí đáng kể.
+	
+	Phạm vi, đối tượng và Phương pháp nghiên cứu
+	Đối tượng nghiên cứu lần này không quá phức tạp. Mình tập trung vào hai mảng chính: Thứ nhất là toàn bộ chuỗi hoạt động trong kho logistics, từ lúc hàng nhập kho, lưu trữ, sắp xếp, chọn hàng cho đến đóng gói. Thứ hai là các số liệu về năng lượng và phát thải  cụ thể là điện tiêu thụ cho chiếu sáng, HVAC, sạc thiết bị, cả lượng nhiên liệu dùng cho xe nâng, xe di chuyển trong kho… kèm theo các hệ số phát thải tương ứng. 
+	Về phạm vi nghiên cứu: 
+	- Nội dung: Nội dung: Chỉ tập trung vào ứng dụng thuật toán học máy và tối ưu hóa cho các hoạt động bên trong kho logistics. Không lan man tới thiết kế xây dựng hay vận tải ngoài kho cho khỏi loãng đề tài.
+	- Không gian: Mình chọn các trung tâm logistics hoặc kho FMCG quy mô vừa và lớn, nằm ở những khu vực kinh tế sôi động như TP.HCM, Bình Dương, Hải Phòng
+	
+	- Thời gian: Dữ liệu vận hành lấy từ giai đoạn 2021–2024 để huấn luyện mô hình và mô phỏng kịch bản "Green Scenario" cho năm 2025.
+	
+	Về phương pháp, mình chọn hướng Mixed Methods — kết hợp nghiên cứu lý thuyết, mô hình toán và thực nghiệm với dữ liệu thực. Quy trình chia thành bốn giai đoạn, vừa đảm bảo tính khoa học, vừa không xa rời thực tế:
+	
+	Cách tiếp cận chia thành bốn giai đoạn logic, đảm bảo vừa khoa học vừa bám sát thực tế: 
+	
+	Giai đoạn 1, mình xây dựng khung đánh giá và xác định baseline. Dùng phương pháp rà soát tài liệu hệ thống (SLR) để tổng hợp các bộ chỉ số Green KPIs quốc tế, đồng thời xác định luôn kịch bản gốc để làm mốc so sánh sau này. 
+	
+	Giai đoạn 2, tập trung phát triển nhóm mô hình dự báo. Lấy dữ liệu từ hệ thống WMS thực tế, làm sạch dữ liệu, rồi thử các mô hình SARIMA, Prophet, XGBoost để chọn ra giải pháp Hybrid tối ưu nhất.
+	
+	Giai đoạn 3, mình tối ưu hóa vận hành bằng thuật toán Di truyền cải tiến (IGA). Dùng kết quả dự báo ở bước trước để giải bài toán Slotting, áp dụng kỹ thuật lai ghép vòng và đột biến đa thức nhằm tìm lời giải tối ưu cho các mục tiêu đa chiều.
+	
+	Giai đoạn 4, chuyển toàn bộ hoạt động vận hành sang đơn vị kgCO2e theo chuẩn ISO 14064. Đồng thời thực hiện kiểm định thống kê để đánh giá mức cải thiện của kịch bản “Green Scenario” so với baseline.
+	
+	Phương pháp thực nghiệm và đánh giá Về thực nghiệm: 
+	phát triển hệ thống dự báo nhu cầu theo ngữ cảnh (Contextual Forecasting) cho quản lý tồn kho kho xanh GWMS, tự động chọn mô hình tối ưu từ bộ {SARIMA, Prophet, XGBoost, Hybrid} dựa trên hồ sơ ngữ cảnh thời gian thực của từng SKU. Nghiên cứu giải quyết thách thức dự báo trong môi trường logistics Việt Nam có tính biến động cao do mùa vụ Tết, flash sale, FDI và gián đoạn chuỗi cung ứng.
+	
+	Phương pháp và công thức toán học
+	Bước 1: Xây dựng Context Profile Vector
+	- Cho mỗi SKU$_i$ tại thời điểm $t$, hệ thống sinh vector ngữ cảnh 5 chiều:
+	 ci,t=[st,vt,qt,et,pt]T∈R5
+Trong đó: 
+	
+	
+	
+	
+	
+	Bước 2: Meta-Model Selection
+	Meta-model (XGBoost Classifier) được huấn luyện trên historical performance matrix:
+	
+	
+	Bước 3: Dự báo theo mô hình tối ưu:
+	
+	Ước tính hiệu quả
+	Giảm MAPE 10-25% so single model (từ 13% → 8.5%)
+	R² ≥0.85
+	Quy đổi sai số → tiết kiệm kgCO₂e (ISO 14064)
+	
+	Kế hoạch và nội dung chính cần thực hiện
+	Liệt kê chi tiết các nội dung công việc cần thực hiện theo từng tuần/giai đoạn.
+	Trình bày công nghệ, mô hình, công cụ dự kiến sử dụng cho từng nội dung.
+	Đảm bảo kế hoạch phù hợp và hoàn thành đúng thời hạn cuộc thi.
+	Dự kiến kết quả đạt được
+	Mô tả kết quả dự kiến đạt được của đề tài: 
+Vòng 1 – Thuyết minh ý tưởng và phương án triển khai
+Xác định rõ vấn đề cần giải quyết, mục tiêu và phạm vi của đề tài.
+Trình bày được ý tưởng, giải pháp đề xuất và hướng tiếp cận phù hợp.
+Đề xuất phương án triển khai có tính khả thi, phù hợp với điều kiện thực tế.
+Thể hiện được tiềm năng ứng dụng và định hướng phát triển của đề tài.
+Vòng 2 – Sản phẩm/ Mô hình:
+Mô tả kết quả dự kiến đạt được của nghiên cứu về mô hình, hệ thống hoặc sản phẩm với các ý tưởng đề xuất ở vòng 1, đồng thời nêu phương án triển khai và phương pháp đánh giá dự kiến.
+Hoàn thiện báo cáo khoa học tổng hợp kết quả nghiên cứu/triển khai.
+	Khả năng mở rộng, phát triển trong tương lai
+	GreenMind-GWMS được thiết kế dạng module cho phép doanh nghiệp triển khai từng bước theo nhu cầu: Giai đoạn 1 chỉ cần Module 1 GreenMind Forecasting giảm tồn kho dư thừa; Giai đoạn 2 bổ sung IGA Slotting tối ưu vị trí lưu trữ; Giai đoạn 3 tích hợp cảm biến IoT theo khả năng đầu tư. Hệ thống dễ dàng nâng cấp khi thị trường carbon Việt Nam vận hành (2026-2028), tự động tạo báo cáo phát thải CO₂ theo ISO 14064 phục vụ giao dịch tín chỉ ETS. Tương lai có thể tích hợp robot tự hành AMR và kết nối ERP/TMS hiện có của doanh nghiệp. Tầm nhìn 2030: scale cho 50+ kho FMCG khu vực phía Nam, đóng góp vào Chiến lược Logistics Xanh Việt Nam đến 2035 với giải pháp công nghệ nội địa, chi phí phù hợp doanh nghiệp Việt.
+	Danh mục tài liệu tham khảo
+TÀI LIỆU THAM KHẢO
+Cosimato, Silvia. (2015). Green supply chain management: Practices and tools for logistics competitiveness and sustainability. The DHL case study. The TQM Journal, 27(2), 256-276.
+McKinnon, Alan. (2015). Green logistics: Improving the environmental sustainability of logistics. Kogan Page Publishers.
+Miklautsch, Philipp. (2023). The adoption of industrial logistics decarbonization practices: Evidence from Austria. Transportation Research Interdisciplinary Perspectives, 21, 100857.
+Perotti, Sara. (2023). Greening warehouses through energy efficiency and environmental impact reduction: a conceptual framework based on a systematic literature review. The International Journal of Logistics Management, 34(7), 199-234.
+QUYẾT, PHAN ĐÌNH. (không ngày tháng). NGHIÊN CỨU THựC TRẠNG LOGISTICS XANH VÀ CHUYEN Đổi sô TRONG CÁC DOANH NGHIỆP LOGISTICS VIỆT NAM.
+Ren, Qiang, Ku, Yao Yao Wang, Yiqing Wu, Peng. (2023). Research on design and optimization of green warehouse system based on case analysis. Journal of cleaner production, 388, 135998.
+Smith, Jerry D. (1998). The warehouse management handbook. Tompkins press.
+Trang, Đoàn Thị Thu Linh, Nguyen Khanh. (2024). Hoạt động logistics xanh tại Việt Nam: Thực trạng, cơ hội và giải pháp thúc đẩy.
+Van Vo, H Nguyen, NP. (2023). Greening the Vietnamese supply chain: The influence of green logistics knowledge and intellectual capital. Heliyon, 9 (5), e15953.
+
+
+		TP. Hồ Chí Minh, ngày 6…tháng 1…năm 2026…
+		Trưởng nhóm đăng ký
+		VŨ

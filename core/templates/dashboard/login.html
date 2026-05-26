@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %}Xác thực danh tính | GreenMind AI{% endblock %}
+
+{% block content %}
+<div class="flex h-screen w-full relative bg-dark-950 overflow-hidden">
+    
+    <!-- 🧬 PANEL GIỚI THIỆU (Trái) -->
+    <div class="hidden lg:flex flex-1 flex-col items-center justify-center relative overflow-hidden border-r border-white/5 bg-dark-900/50">
+        <!-- Nền kỹ thuật -->
+        <div class="absolute inset-0 opacity-20" 
+             style="background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0); background-size: 40px 40px;"></div>
+        
+        <!-- Hiệu ứng ánh sáng -->
+        <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-brand-500/10 blur-[120px] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-blue-500/10 blur-[100px] rounded-full translate-x-1/3 translate-y-1/3"></div>
+        
+        <div class="relative z-10 text-center px-20 space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
+            <!-- Nhãn hệ thống -->
+            <div class="inline-flex items-center px-4 py-1.5 rounded-full bg-dark-950 border border-white/10 shadow-2xl">
+                <div class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse mr-3"></div>
+                <span class="text-[9px] text-gray-400 font-black uppercase tracking-[0.3em]">
+                    Nền tảng AI Doanh nghiệp v4.2.0
+                </span>
+            </div>
+            
+            <div class="space-y-4">
+                <h1 class="text-6xl font-black text-white italic tracking-tighter leading-none uppercase">
+                    GreenMind <span class="text-brand-500">AI</span>
+                </h1>
+                <p class="text-xs text-gray-500 font-bold uppercase tracking-[0.4em] leading-loose max-w-md mx-auto italic">
+                    Hệ thống dự báo AI & quản lý chuỗi cung ứng xanh thông minh. Vui lòng xác thực để truy cập.
+                </p>
+            </div>
+
+            <!-- Thông số hệ thống -->
+            <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto opacity-40">
+                <div class="p-3 bg-white/5 border border-white/5 rounded-xl text-left">
+                    <div class="text-[8px] text-gray-600 font-black uppercase mb-1">Độ trễ mạng</div>
+                    <div class="text-[10px] text-white font-mono">0.0024ms</div>
+                </div>
+                <div class="p-3 bg-white/5 border border-white/5 rounded-xl text-left">
+                    <div class="text-[8px] text-gray-600 font-black uppercase mb-1">Mã_hóa</div>
+                    <div class="text-[10px] text-white font-mono uppercase">AES_256_GCM</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔑 PHẦN XÁC THỰC (Phải) -->
+    <div class="flex-1 flex flex-col justify-center relative px-8 lg:px-24">
+        <!-- Nền mobile -->
+        <div class="lg:hidden absolute inset-0 bg-dark-950">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-brand-500/10 blur-[80px] rounded-full"></div>
+        </div>
+
+        <div class="w-full max-w-md mx-auto relative z-10 space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
+            
+            <!-- Tiêu đề -->
+            <div class="space-y-4 text-center lg:text-left">
+                <h2 class="text-3xl font-black text-white italic uppercase tracking-tighter leading-none">Xác thực <span class="text-brand-500">danh tính</span></h2>
+                <p class="text-[10px] text-gray-600 font-bold uppercase tracking-[0.3em]">Đăng nhập để truy cập hệ thống GreenMind AI.</p>
+            </div>
+
+            <!-- Thông báo hệ thống -->
+            {% if messages %}
+                <div class="space-y-3">
+                    {% for message in messages %}
+                        <div class="px-6 py-4 text-[10px] font-black uppercase tracking-widest rounded-2xl border flex items-center gap-4 animate-in slide-in-from-top-4 duration-500
+                             {% if message.tags == 'error' %} bg-red-500/10 text-red-500 border-red-500/20
+                             {% else %} bg-brand-500/10 text-brand-500 border-brand-500/20 {% endif %}">
+                            <div class="w-1.5 h-1.5 rounded-full {% if message.tags == 'error' %}bg-red-500{% else %}bg-brand-500{% endif %}"></div>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- TAB ĐĂNG NHẬP / ĐĂNG KÝ -->
+            <div class="glass-panel p-2 rounded-[2rem] border-white/5 bg-dark-900/30 flex relative">
+                <button type="button" onclick="switchTab('login')" id="tab-login" class="flex-1 py-4 text-[10px] font-black uppercase tracking-[0.2em] rounded-[1.5rem] transition-all relative z-10 text-brand-500 bg-brand-500/10 border border-brand-500/20">Đăng nhập</button>
+                <button type="button" onclick="switchTab('register')" id="tab-register" class="flex-1 py-4 text-[10px] font-black uppercase tracking-[0.2em] rounded-[1.5rem] transition-all relative z-10 text-gray-600 hover:text-white">Đăng ký mới</button>
+            </div>
+
+            <!-- FORM -->
+            <div class="space-y-8">
+                <!-- FORM ĐĂNG NHẬP -->
+                <form method="POST" action="{% url 'login' %}" id="form-login" class="space-y-6">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="login">
+                    
+                    <div class="space-y-3 group">
+                        <label class="block text-[9px] font-black text-gray-700 uppercase tracking-[0.4em] pl-1 group-focus-within:text-brand-500 transition-colors">Tên đăng nhập</label>
+                        <div class="relative">
+                            <input type="text" name="username" required class="w-full bg-dark-950/50 border border-white/5 group-hover:border-white/10 rounded-2xl text-white px-6 py-5 font-mono text-xs focus:ring-1 focus:ring-brand-500/50 focus:border-brand-500/50 outline-none transition-all placeholder-gray-800" placeholder="Nhập tên đăng nhập...">
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 group">
+                        <label class="block text-[9px] font-black text-gray-700 uppercase tracking-[0.4em] pl-1 group-focus-within:text-brand-500 transition-colors">Mật khẩu</label>
+                        <div class="relative">
+                            <input type="password" name="password" required class="w-full bg-dark-950/50 border border-white/5 group-hover:border-white/10 rounded-2xl text-white px-6 py-5 font-mono text-xs focus:ring-1 focus:ring-brand-500/50 focus:border-brand-500/50 outline-none transition-all placeholder-gray-800" placeholder="••••••••">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-dark-950 font-black py-6 px-4 rounded-3xl transition-all shadow-2xl shadow-brand-500/20 active:scale-[0.98] uppercase text-[11px] tracking-[0.4em] italic mt-10">
+                        Đăng nhập hệ thống
+                    </button>
+                </form>
+
+                <!-- FORM ĐĂNG KÝ (Ẩn) -->
+                <form method="POST" action="{% url 'login' %}" id="form-register" class="space-y-4 hidden">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="register">
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2 group">
+                            <label class="block text-[8px] font-black text-gray-700 uppercase tracking-[0.4em] pl-1">Tên đăng nhập</label>
+                            <input type="text" name="reg_username" required class="w-full bg-dark-950/50 border border-white/5 rounded-xl text-white px-4 py-3 font-mono text-xs focus:border-brand-500/50 outline-none transition-all" placeholder="username">
+                        </div>
+                        <div class="space-y-2 group">
+                            <label class="block text-[8px] font-black text-gray-700 uppercase tracking-[0.4em] pl-1">Họ và tên</label>
+                            <input type="text" name="reg_fullname" required class="w-full bg-dark-950/50 border border-white/5 rounded-xl text-white px-4 py-3 font-mono text-xs focus:border-brand-500/50 outline-none transition-all" placeholder="Trần Văn A">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2 group">
+                            <label class="block text-[8px] font-black text-gray-700 uppercase tracking-[0.4em] pl-1">Email</label>
+                            <input type="email" name="reg_email" required class="w-full bg-dark-950/50 border border-white/5 rounded-xl text-white px-4 py-3 font-mono text-xs focus:border-brand-500/50 outline-none transition-all" placeholder="email@gmail.com">
+                        </div>
+                        <div class="space-y-2 group">
+                            <label class="block text-[8px] font-black text-gray-700 uppercase tracking-[0.4em] pl-1">Số điện thoại</label>
+                            <input type="text" name="reg_phone" required class="w-full bg-dark-950/50 border border-white/5 rounded-xl text-white px-4 py-3 font-mono text-xs focus:border-brand-500/50 outline-none transition-all" placeholder="090...">
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 group">
+                        <label class="block text-[8px] font-black text-gray-700 uppercase tracking-[0.4em] pl-1">Ngày sinh</label>
+                        <input type="date" name="reg_dob" required class="w-full bg-dark-950/50 border border-white/5 rounded-xl text-white px-4 py-3 font-mono text-xs focus:border-brand-500/50 outline-none transition-all">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2 group">
+                            <label class="block text-[8px] font-black text-gray-700 uppercase tracking-[0.4em] pl-1">Mật khẩu</label>
+                            <input type="password" name="reg_password" required class="w-full bg-dark-950/50 border border-white/5 rounded-xl text-white px-4 py-3 font-mono text-xs focus:border-brand-500/50 outline-none transition-all" placeholder="••••••••">
+                        </div>
+                        <div class="space-y-2 group">
+                            <label class="block text-[8px] font-black text-gray-700 uppercase tracking-[0.4em] pl-1">Xác nhận</label>
+                            <input type="password" name="reg_password_confirm" required class="w-full bg-dark-950/50 border border-white/5 rounded-xl text-white px-4 py-3 font-mono text-xs focus:border-brand-500/50 outline-none transition-all" placeholder="••••••••">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-dark-950 font-black py-4 px-4 rounded-2xl transition-all shadow-2xl shadow-blue-500/20 active:scale-[0.98] uppercase text-[10px] tracking-[0.3em] mt-4">
+                        Tạo giao thức mới
+                    </button>
+                </form>
+            </div>
+
+            <div class="pt-10 border-t border-white/5 flex items-center justify-between">
+                <span class="text-[8px] text-gray-700 font-bold uppercase tracking-widest italic">© 2026 GreenMind AI — Bảo mật tuyệt đối</span>
+                <div class="flex gap-4 opacity-20 filter grayscale">
+                    <div class="w-2.5 h-2.5 rounded-full bg-gray-600"></div>
+                    <div class="w-2.5 h-2.5 rounded-full bg-gray-600"></div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchTab(tab) {
+        const formLogin = document.getElementById('form-login');
+        const formRegister = document.getElementById('form-register');
+        const tabLogin = document.getElementById('tab-login');
+        const tabRegister = document.getElementById('tab-register');
+
+        if (tab === 'login') {
+            formLogin.classList.remove('hidden');
+            formRegister.classList.add('hidden');
+            tabLogin.className = "flex-1 py-4 text-[10px] font-black uppercase tracking-[0.2em] rounded-[1.5rem] transition-all relative z-10 text-brand-500 bg-brand-500/10 border border-brand-500/20";
+            tabRegister.className = "flex-1 py-4 text-[10px] font-black uppercase tracking-[0.2em] rounded-[1.5rem] transition-all relative z-10 text-gray-600 hover:text-white";
+        } else {
+            formRegister.classList.remove('hidden');
+            formLogin.classList.add('hidden');
+            tabRegister.className = "flex-1 py-4 text-[10px] font-black uppercase tracking-[0.2em] rounded-[1.5rem] transition-all relative z-10 text-blue-400 bg-blue-500/10 border border-blue-500/20";
+            tabLogin.className = "flex-1 py-4 text-[10px] font-black uppercase tracking-[0.2em] rounded-[1.5rem] transition-all relative z-10 text-gray-600 hover:text-white";
+        }
+    }
+</script>
+{% endblock %}

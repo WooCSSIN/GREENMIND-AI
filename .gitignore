@@ -1,0 +1,41 @@
+# Python / virtualenv
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+dist/
+build/
+
+# Environment & Secrets
+.env
+.env*
+!.env.example
+
+# Django
+db.sqlite3
+staticfiles/
+media/
+
+# Notebooks
+.ipynb_checkpoints/
+notebooks/
+outputs/
+*.csv
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# GreenMind Specific
+tmp/
+check_*.py
+debug_*.py
+views_*.py
+*.log
